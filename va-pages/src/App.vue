@@ -1,5 +1,5 @@
 <template>
-	<Dashboard/>
+	<RouterView/>
 </template>
 <script>
 import Dashboard from "@/components/Dashboard.vue";

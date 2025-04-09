@@ -1,6 +1,5 @@
 package org.flyunion.controller;
 
-import org.flyunion.annotation.SkipAuthentication;
 import org.flyunion.entity.weather.MetarData;
 import org.flyunion.service.service.MetarService;
 import org.flyunion.utils.Result;
@@ -22,7 +21,6 @@ public class MetarController {
 		this.metarService = metarService;
 	}
 
-	@SkipAuthentication
 	@GetMapping("/{icao}")
 	public ResponseEntity<Result<MetarData>> fetchData(@PathVariable String icao) throws IOException, InterruptedException {
 		MetarData metarData = metarService.getMetarData(icao);

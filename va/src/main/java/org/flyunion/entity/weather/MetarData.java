@@ -35,7 +35,8 @@ public class MetarData {
 	@NoArgsConstructor
 	@AllArgsConstructor
 	public static class Wind {
-		private String direction;         // 风向(度数或VRB)
+		private boolean isVRB;
+		private String windDirection;         // 风向(度数或VRB)
 		private int speed;                // 风速
 		private Integer gustSpeed;        // 阵风风速(可选)
 		private String speedUnit;        // 速度单位(MPS/KT)

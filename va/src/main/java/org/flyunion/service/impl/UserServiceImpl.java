@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
 			log.info("明文密码加密完毕！");
 			Company companyByID = companyMapper.getCompanyByID(user.getCompany());
 			log.info("将航司基地：{}填入到注册对象中", companyByID.getBase());
-			user.setPosition(companyByID.getBase());
+			user.setAirport(companyByID.getBase());
 			log.info("执行数据库插入语句，将用户信息添加进系统");
 			int result = userMapper.register(user);
 			if (result > 0) {

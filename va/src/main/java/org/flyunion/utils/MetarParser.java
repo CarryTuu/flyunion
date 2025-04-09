@@ -83,8 +83,8 @@ public class MetarParser {
 		Pattern pattern = Pattern.compile("(\\d{2})(\\d{2})(\\d{2})Z");
 		Matcher matcher = pattern.matcher(metarText);
 		if (matcher.find()) {
-			String time = String.format("%s:%s UTC on day %s",
-					matcher.group(2), matcher.group(3), matcher.group(1));
+			String time = String.format("%s:%s UTC",
+					matcher.group(2), matcher.group(3));
 			log.info("报文生成时间：{}", time);
 			metarData.setObservationTime(time);
 		}
@@ -95,8 +95,9 @@ public class MetarParser {
 		Matcher matcher = pattern.matcher(metarText);
 		if (matcher.find()) {
 			MetarData.Wind wind = new MetarData.Wind();
+			wind.setVRB("VRB".equals(matcher.group(1)));
 			log.info("风向：{}", matcher.group(1));
-			wind.setDirection(matcher.group(1));
+			wind.setWindDirection(matcher.group(1));
 			log.info("风速：{}", Integer.parseInt(matcher.group(2)));
 			wind.setSpeed(Integer.parseInt(matcher.group(2)));
 			if (matcher.group(3) != null) {

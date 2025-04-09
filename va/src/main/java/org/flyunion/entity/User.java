@@ -26,7 +26,7 @@ public class User {
 	private String status;
 	private Integer balance;
 	private String company;
-	private String position;
+	private String airport;
 	private Integer time;
 	private Integer flightCount;
 	private Integer job;

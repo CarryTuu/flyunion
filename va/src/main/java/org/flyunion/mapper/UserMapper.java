@@ -27,9 +27,9 @@ public interface UserMapper {
 	User loginByEmail(String email);
 
 	@Insert("insert into flyunion.user(cid, username, callsign, password, email, permission," +
-			" status, balance, company, position, time, flight_count, qq, job, plane_count) " +
+			" status, balance, company, airport, time, flight_count, qq, job, plane_count) " +
 			"value (#{cid}, #{userName}, #{callsign}, #{password}, #{email}, 1, " +
-			"'normal', 0, #{company}, #{position}, 0, 0, #{qq}, 0, 0)")
+			"'normal', 0, #{company}, #{airport}, 0, 0, #{qq}, 0, 0)")
 	int register(User user);
 
 	@Select("select * from flyunion.user where cid = #{cid}")

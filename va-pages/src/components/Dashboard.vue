@@ -47,7 +47,7 @@
 									</div>
 									<div class="col-md-4 text-center">
 										<el-icon><MapLocation /></el-icon>当前位置
-										<p>{{ loginUser.position }}</p>
+										<p>{{ loginUser.airport }}</p>
 									</div>
 								</div>
 							</div>
@@ -71,8 +71,19 @@
 						</div>
 						<div class="col-md-4">
 							<el-card class="box-card" style="height: 344px">
-								<span>天气大屏</span>
-								<Circle></Circle>
+								<div slot="header">
+									<span>天气大屏</span>
+								</div>
+								<div class="row clearfix">
+									<div class="col-md-6">
+										<Circle/>
+									</div>
+									<div class="col-md-6">
+										<p class="weatherDisplay">报文时间：{{ weather.observationTime }}</p>
+										<p class="weatherDisplay" v-if="weather.wind.vrb">风向：不定</p>
+										<p class="weatherDisplay" v-else>风向：{{ weather.wind.windDirection }}°</p>
+									</div>
+								</div>
 							</el-card>
 						</div>
 					</div>
@@ -102,18 +113,18 @@ import Map from "@/components/utils/Map.vue"
 import va from "@/utils/va.js";
 import {PositionMapper} from "@/utils/PositionMapper.js";
 import Circle from "@/components/utils/Circle.vue";
-import CircleRectDrawer from "@/utils/circleRectDrawer.js";
+import WeatherDisplay from "@/components/utils/WeatherDisplay.vue";
 
 export default {
-	components: {Circle, Menu, Bar, OfficeBuilding, Handbag, Timer, MapLocation, Van, Coin, Map},
+	components: {Circle, Menu, Bar, OfficeBuilding, Handbag, Timer, MapLocation, Van, Coin, Map, WeatherDisplay},
 	data(){
 		return {
 			avatar: "",
-			loginToken: localStorage.getItem("loginUser"),
 			loginUser: {},
 			companyName: "",
 			job: "",
 			topTenList: [],
+			weather: {},
 			column: {
 				topTen: [
 					{
@@ -141,10 +152,6 @@ export default {
 			const res = await va.get("/user/loadLoginUser")
 			this.loginUser = res.data
 			this.avatar = "https://q.qlogo.cn/headimg_dl?dst_uin=" + this.loginUser.qq + "&spec=100&img_type=jpg"
-			va.get("company/getCompanyByID/" + this.loginUser.company)
-					.then(res => (
-							this.companyName = res.data.name
-					))
 			this.job = PositionMapper.getPosition(this.loginUser.job)
 		},
 		getTopTen(){
@@ -153,34 +160,24 @@ export default {
 						this.topTenList = res.data
 					})
 		},
-		// updateDrawing() {
-		// 	const canvas = this.$refs.myCanvas;
-		// 	CircleRectDrawer.initCanvas(canvas, 600, 600);
-		//
-		// 	CircleRectDrawer.draw(
-		// 			canvas,
-		// 			canvas.width / 2,
-		// 			canvas.height / 2,
-		// 			250,               // 圆直径
-		// 			180,               // 长方形长度
-		// 			15,                // 长方形宽度
-		// 			260, // 旋转角度
-		// 			[8, 26],    // 两端数字
-		// 			{
-		// 				circleFill: 'rgba(255, 255, 255, 0.75)',
-		// 				circleStroke: 'rgba(255, 255, 255, 0.75)',
-		// 				rectFill: 'rgba(0, 0, 0, 0.75)',
-		// 				textColor: '#000',
-		// 				textSize: 20,
-		// 				textFont: 'Arial'
-		// 			}
-		// 	);
-		// }
+		getCompanyName(){
+			va.get("company/getCompanyByID/" + this.loginUser.company)
+					.then(res => (
+							this.companyName = res.data.name
+					))
+		},
+		getWeather(){
+			va.get("/metar/" + this.loginUser.airport)
+					.then(res => {
+						this.weather = res.data
+					})
+		}
 	},
 	created() {
 		this.loadLoginUser()
 		this.getTopTen()
-		// this.updateDrawing()
+		this.getCompanyName()
+		this.getWeather()
 	}
 }
 </script>
@@ -191,5 +188,8 @@ export default {
 }
 .box-card-large {
 	background: rgba(255, 255, 255, 0.65);
+}
+.weatherDisplay{
+	margin-top: 10px;
 }
 </style>

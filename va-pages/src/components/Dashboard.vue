@@ -70,7 +70,7 @@
 							</el-card>
 						</div>
 						<div class="col-md-4">
-							<el-card class="box-card" style="height: 344px">
+							<el-card class="box-card" style="height: 344px" v-loading="loading">
 								<div slot="header">
 									<span>天气大屏</span>
 								</div>
@@ -80,7 +80,7 @@
 									</div>
 									<div class="col-md-6">
 										<p class="weatherDisplay">报文时间：{{ weather.observationTime }}</p>
-										<p class="weatherDisplay" v-if="weather.wind.vrb">风向：不定</p>
+										<p class="weatherDisplay" v-if="weather.wind.vrb === true">风向：不定</p>
 										<p class="weatherDisplay" v-else>风向：{{ weather.wind.windDirection }}°</p>
 									</div>
 								</div>
@@ -119,12 +119,42 @@ export default {
 	components: {Circle, Menu, Bar, OfficeBuilding, Handbag, Timer, MapLocation, Van, Coin, Map, WeatherDisplay},
 	data(){
 		return {
+			loading: true,
 			avatar: "",
 			loginUser: {},
 			companyName: "",
 			job: "",
 			topTenList: [],
-			weather: {},
+			weather: {
+				rawText: "",
+				stationId: "",
+				observationTime: "",
+				wind: {
+					windDirection: 0,
+					speed: 0,
+					gustSpeed: null,
+					speedUnit: "",
+					directionVariation: null,
+					vrb: false
+				},
+				visibility: {
+					value: 10000,
+					exceeds10km: true,
+					rawString: ""
+				},
+				weatherConditions: [],
+				clouds: [],
+				temperature: {
+					airTemp: 0,
+					dewPoint: 0
+				},
+				pressure: {
+					qnh: 0,
+					qnhUnit: "hPa"
+				},
+				trend: "NOSIG",
+				cavok: true
+			},
 			column: {
 				topTen: [
 					{
@@ -148,36 +178,31 @@ export default {
 		}
 	},
 	methods: {
-		async loadLoginUser(){
-			const res = await va.get("/user/loadLoginUser")
-			this.loginUser = res.data
-			this.avatar = "https://q.qlogo.cn/headimg_dl?dst_uin=" + this.loginUser.qq + "&spec=100&img_type=jpg"
-			this.job = PositionMapper.getPosition(this.loginUser.job)
+		async loadLoginUser() {
+			const res = await va.get("/user/loadLoginUser");
+			this.loginUser = res.data;
+			this.avatar = "https://q.qlogo.cn/headimg_dl?dst_uin=" + this.loginUser.qq + "&spec=100&img_type=jpg";
+			this.job = PositionMapper.getPosition(this.loginUser.job);
+			
+			// 使用 Promise.all 并行请求，但确保所有数据加载完成
+			const [companyRes, weatherRes] = await Promise.all([
+				va.get("company/getCompanyByID/" + this.loginUser.company),
+				va.get("/metar/" + this.loginUser.airport)
+			]);
+			this.companyName = companyRes.data.name;
+			this.weather = weatherRes.data;
+			this.loading = false
 		},
-		getTopTen(){
+		getTopTen() {
 			va.get("/user/topTen")
 					.then(res => {
 						this.topTenList = res.data
 					})
-		},
-		getCompanyName(){
-			va.get("company/getCompanyByID/" + this.loginUser.company)
-					.then(res => (
-							this.companyName = res.data.name
-					))
-		},
-		getWeather(){
-			va.get("/metar/" + this.loginUser.airport)
-					.then(res => {
-						this.weather = res.data
-					})
 		}
 	},
-	created() {
-		this.loadLoginUser()
+	async created() {
+		await this.loadLoginUser()
 		this.getTopTen()
-		this.getCompanyName()
-		this.getWeather()
 	}
 }
 </script>

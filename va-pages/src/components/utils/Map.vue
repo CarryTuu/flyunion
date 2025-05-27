@@ -1,29 +1,30 @@
 <template>
-	<div ref="mapContainer" class="map-container"></div>
+	<div id="mapContainer" class="map-container"></div>
 </template>
 <script>
-import {initializeMap} from "@/utils/MapInitializer.js";
-import {loadWeather} from "@/utils/WeatherLoader";
+import initAMap, {newPolyLine} from "@/utils/AMapInitializer.js";
 
 export default {
 	data() {
 		return {
 			map: null,
-			isMapInitialized: false
+			path: []
 		}
 	},
 	mounted() {
-		this.map = initializeMap(this.$refs.mapContainer)
-		this.map.on('load', () => {
-			loadWeather(this.map)
-			this.isMapInitialized = true;
-		})
+		this.map = initAMap("mapContainer")
 	},
+	methods: {
+		
+		newPolyline(){
+			newPolyLine(this.map, )
+		}
+	}
 }
 </script>
 <style scoped>
 .map-container {
 	width: 100%;
-	height: 100vh;
+	height: 750px;
 }
 </style>

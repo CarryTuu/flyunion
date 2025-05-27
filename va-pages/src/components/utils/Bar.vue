@@ -19,7 +19,7 @@
 					</li>
 				</ul>
 				<Clock />
-				<span class="text-secondary" style="margin-right: 20px">欢迎您 雨涵妹妹！</span>
+				<span class="text-secondary" style="margin-right: 20px">欢迎您 {{ loginUser.userName }}！</span>
 				<el-button plain type="primary" style="margin-right: 20px">退出登录</el-button>
 			</div>
 		</div>
@@ -27,10 +27,10 @@
 </template>
 
 <script>
-import va from "@/utils/va.js";
 import Menu from "@/components/utils/Menu.vue"
 import Clock from "@/components/utils/Clock.vue"
 import {Monitor} from "@element-plus/icons-vue";
+import va from "@/utils/va.js";
 export default {
 	components: {
 		Menu,
@@ -39,20 +39,17 @@ export default {
 	},
 	data(){
 		return {
-			// loginToken: JSON.parse(localStorage.getItem("loginUser")),
-			loginUser: null,
+			loginUser: {}
 		}
 	},
 	methods: {
-		getLoginUser(){
-			va.post("/user/loadLoginUser")
-					.then(res => {
-						this.loginUser = res.data
-					})
+		async getLoginUser() {
+			const loginUser = await va.get("/user/loadLoginUser")
+			this.loginUser = loginUser.data
 		}
 	},
-	created() {
-		// this.getLoginUser()
+	async created() {
+		await this.getLoginUser()
 	}
 }
 </script>

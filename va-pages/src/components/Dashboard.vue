@@ -1,15 +1,15 @@
 <template>
-	<Bar />
+	<Bar/>
 	<div class="common-layout">
 		<el-container>
-			<el-container>
-				<el-aside width="200px"><Menu /></el-aside>
-				<el-main>
-					<div class="row clearfix">
-						<div class="col-md-4"><el-card class="box-card">
+			<el-aside width="200px"><Menu /></el-aside>
+			<el-main>
+				<div class="row clearfix">
+					<div class="col-md-4">
+						<el-card class="box-card">
 							<div slot="header" class="clearfix">
 								<span>个人信息</span>
-								<el-button style="float: right; padding: 3px; font-size: 15px" type="text">修改信息</el-button>
+								<el-link style="float: right; padding: 3px; font-size: 15px" class="text-primary">修改信息</el-link>
 							</div>
 							<br>
 							<div>
@@ -52,56 +52,62 @@
 								</div>
 							</div>
 						</el-card>
-						</div>
-						<div class="col-md-4">
-							<el-card class="box-card" style="height: 344px">
-								<div slot="header" class="clearfix">
-									<span>执飞排行榜</span>
-								</div>
-								<br>
-								<el-table :data="topTenList" height="250">
-									<el-table-column
-											v-for="item in column.topTen"
-											:key="item.prop"
-											:label="item.label"
-											:prop="item.prop">
-									</el-table-column>
-								</el-table>
-							</el-card>
-						</div>
-						<div class="col-md-4">
-							<el-card class="box-card" style="height: 344px" v-loading="loading">
-								<div slot="header">
-									<span>天气大屏</span>
-								</div>
-								<div class="row clearfix">
-									<div class="col-md-6">
-										<Circle/>
-									</div>
-									<div class="col-md-6">
-										<p class="weatherDisplay">报文时间：{{ weather.observationTime }}</p>
-										<p class="weatherDisplay" v-if="weather.wind.vrb === true">风向：不定</p>
-										<p class="weatherDisplay" v-else>风向：{{ weather.wind.windDirection }}°</p>
-									</div>
-								</div>
-							</el-card>
-						</div>
 					</div>
-					<br>
-					<div class="row clearfix">
-						<div class="col-md-12">
-							<el-card class="box-card-large">
-								<div slot="header">
-									<p class="text-center text-primary"><strong>航班信息大屏</strong></p>
-								</div>
-								<p class="text-center">实时在线航班</p>
-								<p class="text-center">实时在线地图</p>
-							</el-card>
-						</div>
+					<div class="col-md-4">
+						<el-card class="box-card">
+							<div slot="header" class="clearfix">
+								<span>执飞排行榜</span>
+							</div>
+							<br>
+							<el-table :data="topTenList" height="330" style="">
+								<el-table-column
+										v-for="item in column.topTen"
+										:key="item.prop"
+										:label="item.label"
+										:prop="item.prop"
+										:width="item.width">
+								</el-table-column>
+							</el-table>
+						</el-card>
 					</div>
-				</el-main>
-			</el-container>
+					<div class="col-md-4">
+						<el-card class="box-card">
+							<div slot="header">
+								<span>天气大屏</span>
+							</div>
+							<div class="row clearfix">
+								<div class="col-md-5">
+									<Circle/>
+								</div>
+								<WeatherInfo/>
+							</div>
+						</el-card>
+					</div>
+				</div>
+				<br>
+				<div class="row clearfix">
+					<div class="col-md-12">
+						<el-card class="box-card-large">
+							<div slot="header">
+								<p>航班信息大屏</p>
+							</div>
+							<p class="text-center">实时在线航班</p>
+							<el-table v-model:data="planes">
+								<el-table-column
+										v-for="item in column.flight"
+										:label="item.label"
+										:prop="item.prop">
+								</el-table-column>
+							</el-table>
+							<br>
+							<p class="text-center">实时在线地图</p>
+							<Map/>
+						</el-card>
+					</div>
+				</div>
+			</el-main>
 		</el-container>
+		<Footer />
 	</div>
 </template>
 
@@ -113,57 +119,30 @@ import Map from "@/components/utils/Map.vue"
 import va from "@/utils/va.js";
 import {PositionMapper} from "@/utils/PositionMapper.js";
 import Circle from "@/components/utils/Circle.vue";
-import WeatherDisplay from "@/components/utils/WeatherDisplay.vue";
+import WeatherInfo from "@/components/utils/WeatherInfo.vue";
+import Footer from "@/components/utils/Footer.vue"
 
 export default {
-	components: {Circle, Menu, Bar, OfficeBuilding, Handbag, Timer, MapLocation, Van, Coin, Map, WeatherDisplay},
+	components: {Circle, Menu, Bar, OfficeBuilding, Handbag, Timer, MapLocation, Van, Coin, Map, WeatherInfo, Footer},
 	data(){
 		return {
-			loading: true,
 			avatar: "",
 			loginUser: {},
 			companyName: "",
 			job: "",
 			topTenList: [],
-			weather: {
-				rawText: "",
-				stationId: "",
-				observationTime: "",
-				wind: {
-					windDirection: 0,
-					speed: 0,
-					gustSpeed: null,
-					speedUnit: "",
-					directionVariation: null,
-					vrb: false
-				},
-				visibility: {
-					value: 10000,
-					exceeds10km: true,
-					rawString: ""
-				},
-				weatherConditions: [],
-				clouds: [],
-				temperature: {
-					airTemp: 0,
-					dewPoint: 0
-				},
-				pressure: {
-					qnh: 0,
-					qnhUnit: "hPa"
-				},
-				trend: "NOSIG",
-				cavok: true
-			},
 			column: {
 				topTen: [
 					{
 						label: "昵称",
-						prop: "userName"
+						prop: "userName",
+						width: 100
 					},
 					{
 						label: "CID",
-						prop: "cid"
+						prop: "cid",
+						width: 100
+
 					},
 					{
 						label: "航空公司",
@@ -173,8 +152,75 @@ export default {
 						label: "航班数",
 						prop: "flightCount"
 					}
+				],
+				flight: [
+					{
+						label: "航班号",
+						prop: "code"
+					},
+					{
+						label: "飞行员",
+						prop: "pilot"
+					},
+					{
+						label: "起飞机场",
+						prop: "dep"
+					},
+					{
+						label: "落地机场",
+						prop: "arr"
+					},
+					{
+						label: "高度",
+						prop: "attitude"
+					},
+					{
+						label: "速度",
+						prop: "speed"
+					},
 				]
-			}
+			},
+			planes: [
+				{
+					pilot: "100013",
+					code: "MF8000",
+					dep: "ZSAM",
+					arr: "ZSPD",
+					route: "LJG B221 PAMVU V74 BK",
+					speed: "408 kt",
+					attitude: "30158 ft",
+					lng: 121.334508,
+					lat: 29.896228,
+					planeList: "B737_800",
+					angle: 192
+				},
+				{
+					pilot: "100001",
+					code: "MF8001",
+					dep: "ZSPD",
+					arr: "ZYTL",
+					route: "ODULO B221 XDX W174 FD W172 TEKAM V68 ORIXA",
+					speed: "423 kt",
+					attitude: "30758 ft",
+					lng: 121.620556,
+					lat: 33.2525,
+					planeList: "B737_800",
+					angle: 335
+				},
+				{
+					pilot: "100003",
+					code: "3U5264",
+					dep: "ZUUU",
+					arr: "ZHHH",
+					route: "UBRAB B213 VELPU W550 OTLOS V38 TOSIM B213 WTM",
+					speed: "308 kt",
+					attitude: "8900 ft",
+					lng: 104.266167,
+					lat: 30.933028,
+					planeList: "A350_900",
+					angle: 85
+				},
+			],
 		}
 	},
 	methods: {
@@ -185,13 +231,10 @@ export default {
 			this.job = PositionMapper.getPosition(this.loginUser.job);
 			
 			// 使用 Promise.all 并行请求，但确保所有数据加载完成
-			const [companyRes, weatherRes] = await Promise.all([
+			const [companyRes] = await Promise.all([
 				va.get("company/getCompanyByID/" + this.loginUser.company),
-				va.get("/metar/" + this.loginUser.airport)
 			]);
 			this.companyName = companyRes.data.name;
-			this.weather = weatherRes.data;
-			this.loading = false
 		},
 		getTopTen() {
 			va.get("/user/topTen")
@@ -203,18 +246,7 @@ export default {
 	async created() {
 		await this.loadLoginUser()
 		this.getTopTen()
+		console.log(localStorage.getItem("loginUser"))
 	}
 }
 </script>
-<style scoped>
-.box-card {
-	width: 480px;
-	background: rgba(255, 255, 255, 0.65);
-}
-.box-card-large {
-	background: rgba(255, 255, 255, 0.65);
-}
-.weatherDisplay{
-	margin-top: 10px;
-}
-</style>

@@ -1,12 +1,9 @@
 import axios from "axios";
 
 const sqliteService = axios.create({
+
     baseURL: "http://localhost:9998",
-    headers: {
-        'Access-Control-Allow-Origin': 'http://localhost:5173',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
-        'Access-Control-Allow-Headers': 'Content-Type'
-    }
+    withCredentials: true
 });
 //请求拦截器
 sqliteService.interceptors.request.use(config => {

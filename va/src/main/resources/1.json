@@ -1,0 +1,30 @@
+{
+	"code": 200,
+	"message": "找到如下航空公司信息！",
+	"data": [
+		{
+			"id": "342031651290825",
+			"name": "中国南方航空",
+			"pilotCount": 4,
+			"balance": "2000000",
+			"planeCount": 10,
+			"base": "ZGGG"
+		},
+		{
+			"id": "622994566201426",
+			"name": "中国国际航空",
+			"pilotCount": 2,
+			"balance": "1200000",
+			"planeCount": 3,
+			"base": "ZBAA"
+		},
+		{
+			"id": "839218643384247",
+			"name": "厦门航空",
+			"pilotCount": 1,
+			"balance": "1000000",
+			"planeCount": 1,
+			"base": "ZSAM"
+		}
+	]
+}

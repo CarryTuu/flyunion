@@ -6,15 +6,25 @@
 
 <script>
 import CircleRectDrawer from '@/utils/circleRectDrawer.js';
+import axios from "axios";
+import sqlite from "@/utils/sqlite.js";
+import va from "@/utils/va.js";
 
 export default {
 	data() {
 		return {
-		
+			runwayData: {
+				secondaryRunway: "",
+				primaryRunway: "",
+				heading: 0
+			},
+			airport: ""
 		}
 	},
-	mounted() {
+	async created() {
+		await this.loadLoginUser()
 		this.updateDrawing();
+		
 	},
 	methods: {
 		updateDrawing() {
@@ -23,13 +33,13 @@ export default {
 			
 			CircleRectDrawer.draw(
 					canvas,
-					100,
-					125,
-					200,               // 圆直径
-					130,               // 长方形长度
-					20,                // 长方形宽度
-					230     , // 旋转角度
-					[5, 23],    // 两端数字
+					87.5,
+					112.5,
+					175,               // 圆直径
+					115,               // 长方形长度
+					15,                // 长方形宽度
+					this.runwayData.heading     , // 旋转角度
+					[this.runwayData.secondaryRunway, this.runwayData.primaryRunway],    // 两端数字
 					{
 						circleFill: 'rgba(255, 255, 255, 0.75)',
 						circleStroke: 'rgba(255, 255, 255, 0.75)',
@@ -39,6 +49,13 @@ export default {
 						textFont: 'Arial'
 					}
 			);
+		},
+		async loadLoginUser() {
+			const res = await va.get("/user/loadLoginUser");
+			await sqlite.get("/runwayEnd/getRunwayInfo/" + res.data.airport)
+					.then(res => {
+						this.runwayData = res.data
+					})
 		}
 	}
 }

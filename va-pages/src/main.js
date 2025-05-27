@@ -1,5 +1,7 @@
 import 'element-plus/theme-chalk/index.css';
 
+import 'mapbox-gl/dist/mapbox-gl.css';
+import '@/assets/style.css'
 import {createApp} from 'vue'
 import App from './App.vue'
 import ElementUI from 'element-plus'

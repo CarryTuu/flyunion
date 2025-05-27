@@ -4,6 +4,8 @@ import Register from "@/components/Register.vue";
 import Support from "@/components/Support.vue";
 import PasswordReset from "@/components/PasswordReset.vue";
 import Dashboard from "@/components/Dashboard.vue";
+import CompanyList from "@/components/company/CompanyList.vue";
+import CompanyDetail from "@/components/company/CompanyDetail.vue";
 
 const routes = [
     {
@@ -25,6 +27,15 @@ const routes = [
     {
         path: "/Dashboard",
         component: Dashboard
+    },
+    {
+        path: "/Company",
+        component: CompanyList
+    },
+    {
+        path: "/Company/:id",
+        name: "CompanyDetail",
+        component: CompanyDetail
     }
 ]
 

@@ -63,10 +63,6 @@ export default {
             return;
         }
 
-        // 格式化数字（小于10补零）
-        const formatNumber = (num) => {
-            return num < 10 ? `0${num}` : num.toString();
-        };
         // 合并默认样式
         const {
             circleFill = 'transparent',
@@ -125,14 +121,14 @@ export default {
 
         // 绘制起始端数字（自动补零）
         ctx.fillText(
-            formatNumber(endNumbers[0]), // 使用格式化后的数字
+            endNumbers[0], // 使用格式化后的数字
             0,
             -textOffset
         );
 
         // 绘制结束端数字
         ctx.fillText(
-            formatNumber(endNumbers[1]), // 使用格式化后的数字
+            endNumbers[1], // 使用格式化后的数字
             0,
             textOffset
         );

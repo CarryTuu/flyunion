@@ -3,10 +3,11 @@
 			default-active="2"
 			class="el-menu-vertical-demo"
 			:collapse="isCollapse"
+			style="background: rgba(255, 255, 255, 0.65)"
 	>
 		<el-menu-item index="1">
-			<el-icon><location /></el-icon>
-			<template #title>Navigator One</template>
+			<el-icon><OfficeBuilding /></el-icon>
+			<template #title><a href="/Company" class="href">航空公司</a></template>
 		</el-menu-item>
 		<el-menu-item index="2">
 			<el-icon><Menu /></el-icon>
@@ -31,11 +32,11 @@
 	</el-menu>
 </template>
 <script>
-import {Menu, Setting, Location, Document} from "@element-plus/icons-vue";
+import {Menu, Setting, Location, Document, OfficeBuilding} from "@element-plus/icons-vue";
 
 export default {
 	components: {
-		Location, Menu, Setting, Document
+		Location, Menu, Setting, Document, OfficeBuilding
 	},
 	name: 'SidebarMenu',
 	data() {
@@ -54,6 +55,10 @@ export default {
 <style>
 .el-menu-vertical-demo:not(.el-menu--collapse) {
 	width: 200px;
-	min-height: 400px;
+	min-height: 700px;
+}
+.href{
+	text-decoration: none;
+	color: #000;
 }
 </style>

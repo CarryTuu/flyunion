@@ -143,17 +143,31 @@ public class MetarParser {
 	}
 
 	private static void parseWeatherConditions(String metarText, MetarData metarData) {
-		Pattern pattern = Pattern.compile("(\\+|-|VC)?(TS|RA|SN|FG|BR|HZ|DU)");
-		Matcher matcher = pattern.matcher(metarText);
+		// 先找到趋势预报的位置（BECMG/TEMPO等）
+		int trendIndex = findTrendIndex(metarText);
+
+		// 只截取趋势预报之前的部分进行天气解析
+		String mainWeatherPart = trendIndex >= 0
+				? metarText.substring(0, trendIndex)
+				: metarText;
+
+		// 在主体部分匹配天气现象
+		Pattern pattern = Pattern.compile("(\\+|-|VC)?(TS|RA|SN|FG|BR|HZ|DU|SHRA)");
+		Matcher matcher = pattern.matcher(mainWeatherPart);
 
 		while (matcher.find()) {
 			MetarData.WeatherCondition condition = new MetarData.WeatherCondition();
-			log.info("天气类型：{}", matcher.group(1));
 			condition.setIntensity(matcher.group(1));
-			log.info("天气强度：{}", matcher.group(2));
 			condition.setDescriptor(matcher.group(2));
 			metarData.getWeatherConditions().add(condition);
 		}
+	}
+
+	// 辅助方法：找到趋势预报的开始位置
+	private static int findTrendIndex(String metarText) {
+		Pattern trendPattern = Pattern.compile("\\s(BECMG|TEMPO|NOSIG)\\s");
+		Matcher trendMatcher = trendPattern.matcher(metarText);
+		return trendMatcher.find() ? trendMatcher.start() : -1;
 	}
 
 	private static void parseClouds(String metarText, MetarData metarData) {

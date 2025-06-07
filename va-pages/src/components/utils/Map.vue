@@ -74,7 +74,7 @@ export default {
 	methods: {
 		createImgElement(){
 			const element = document.createElement("img");
-			element.src = "/public/a35k.png";
+			element.src = "/a35k.png";
 			element.style.width = "35px";
 			element.style.height = "35px";
 			return element

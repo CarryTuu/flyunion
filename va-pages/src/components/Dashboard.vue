@@ -246,7 +246,6 @@ export default {
 	async created() {
 		await this.loadLoginUser()
 		this.getTopTen()
-		console.log(localStorage.getItem("loginUser"))
 	}
 }
 </script>

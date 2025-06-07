@@ -1,13 +1,13 @@
 import mapboxgl from "mapbox-gl";
 
 
-export function initializeMap(container) {
+export default function initializeMap(container) {
     mapboxgl.accessToken = "pk.eyJ1IjoiZ3VvYXI3c2J2ZCIsImEiOiJjbTE5ZTRwNG8xNjB5MmpzYm5idG5scTEwIn0.OTqwjAzUggn3H0vXnRJP1Q";
     return new mapboxgl.Map({
         container: container,
-        style: "mapbox://styles/guoar7sbvd/clwxoqjpj018i01pp39ag056t",
-        center: [116.397428, 39.90923],
-        zoom: 3,
+        style: "mapbox://styles/mapbox/dark-v10",
+        center: [108.9236, 37.5408],
+        zoom: 3.5,
         useWebGL2: true
     });
 }

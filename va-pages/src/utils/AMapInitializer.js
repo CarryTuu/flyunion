@@ -1,9 +1,9 @@
 import * as AMapLoader from "@amap/amap-jsapi-loader";
-import AMap from "@amap/amap-jsapi-loader"
+import AMap from "@amap/amap-jsapi-loader";
 
 let mapInstance = null
 
-export default function initAMap(container){
+export default async function initAMap(container){
     if(mapInstance){
         return Promise.resolve(mapInstance);
     }
@@ -16,9 +16,10 @@ export default function initAMap(container){
         mapStyle: "amap://styles/grey"
     };
 
-    AMapLoader.load({
+    await AMapLoader.load({
         key: "c2e6e41dec5661f4f14d75cc127dc62a",
-        plugins: ["AMap.Scale", "AMap.ToolBar"]
+        plugins: ["AMap.Scale", "AMap.ToolBar"],
+        version: "2.0",
     })
         .then((AMap) => {
             mapInstance = new AMap.Map(container, defaultOptions)
@@ -57,4 +58,22 @@ export function newPolyLine(map, path = []){
         lineJoin: "round", //折线拐点连接处样式
     });
     map.add(polyline);
+}
+
+export function newMarker(map, lng, lat, plane){
+    const icon = new AMap.Icon({
+        image: "@/assets/a35k.png", //Icon 的图像
+        size: [60, 60],
+        imageSize: [40, 40]
+    });
+    const marker = new AMap.Marker({
+        position: new AMap.LngLat(lng, lat), //点标记的位置
+        icon: icon, //添加 Icon 实例
+        offset: [-20, -20],
+        angle: plane.angle,
+        extData: {
+            data: plane
+        },
+    });
+    map.add(marker)
 }

@@ -79,7 +79,6 @@ export default {
 			const weatherInfo = await va.get("/metar/" + res.data.airport)
 			this.weather = weatherInfo.data
 			this.loading = false
-			console.log(this.weather)
 		}
 	},
 	created(){

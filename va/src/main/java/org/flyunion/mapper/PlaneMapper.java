@@ -33,4 +33,7 @@ public interface PlaneMapper {
 
 	@Update("update flyunion.plane set status = 'crashed' where code = #{code}")
 	int planeDestroyed(String code);
+
+	@Select("select * from flyunion.plane where company = #{company}")
+	List<Plane> getPlaneByCompany(String company);
 }

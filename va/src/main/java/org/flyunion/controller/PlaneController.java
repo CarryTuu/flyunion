@@ -73,4 +73,11 @@ public class PlaneController {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Result<>(500,
 				"服务器出现致命错误导致此操作未完成，请联系管理员", null));
 	}
+
+	@GetMapping("/getPlaneByCompany/{company}")
+	public ResponseEntity<Result<?>> getPlanesByCompany(@PathVariable String company){
+		return ResponseEntity.ok(new Result<>(200, "找到如下飞机",
+				planeService.getPlaneByCompany(company)));
+
+	}
 }

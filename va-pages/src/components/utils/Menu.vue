@@ -11,7 +11,7 @@
 		</el-menu-item>
 		<el-menu-item index="2">
 			<el-icon><Menu /></el-icon>
-			<template #title>Navigator Two</template>
+			<template #title><a href="/newFlight" class="href">开始新航班</a></template>
 		</el-menu-item>
 		<el-menu-item index="3">
 			<el-icon><document /></el-icon>

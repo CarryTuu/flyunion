@@ -43,4 +43,7 @@ public interface UserMapper {
 
 	@Select("select * from flyunion.user order by flight_count desc limit 10")
 	List<User> getTopTenUserByLogs();
+
+	@Select("select * from flyunion.user where company = #{company}")
+	List<User> getUserByCompany(String company);
 }

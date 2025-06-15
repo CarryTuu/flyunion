@@ -1,12 +1,10 @@
 package org.flyunion.controller;
 
+import org.flyunion.entity.request.RouteRequest;
 import org.flyunion.service.WaypointService;
 import org.flyunion.utils.Result;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/waypoint")
@@ -18,8 +16,8 @@ public class WaypointController {
 		this.waypointService = waypointService;
 	}
 
-	@GetMapping("/{route}")
-	public ResponseEntity<Result<?>> getCoordinates(@PathVariable String route){
+	@PostMapping("/getRoute")
+	public ResponseEntity<Result<?>> getCoordinates(@RequestBody RouteRequest route){
 		return ResponseEntity.ok(new Result<>(200, "操作完成", waypointService.getCoordinates(route)));
 	}
 }

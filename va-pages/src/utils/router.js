@@ -6,6 +6,7 @@ import PasswordReset from "@/components/PasswordReset.vue";
 import Dashboard from "@/components/Dashboard.vue";
 import CompanyList from "@/components/company/CompanyList.vue";
 import CompanyDetail from "@/components/company/CompanyDetail.vue";
+import newFlight from "@/components/newFlight/newFlight.vue";
 
 const routes = [
     {
@@ -36,6 +37,10 @@ const routes = [
         path: "/Company/:id",
         name: "CompanyDetail",
         component: CompanyDetail
+    },
+    {
+        path: "/newFlight",
+        component: newFlight
     }
 ]
 

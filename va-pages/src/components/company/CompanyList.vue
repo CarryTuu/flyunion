@@ -4,21 +4,23 @@
 		<el-container>
 			<el-aside width="200px"><Menu /></el-aside>
 			<el-main>
-				<br>
-				<p class="text-center">您可以直接点击您想了解的航空公司的名称跳转至航司详情界面</p>
-				<br>
-				<el-table :data="companies">
-					<el-table-column
-							v-for="item in column"
-							:label="item.label"
-							:prop="item.prop">
-					</el-table-column>
-					<el-table-column label="操作">
-						<template v-slot:default="scope">
-							<el-button type="primary" plain @click="getCompanyDetail(scope.row)">查看航司详情</el-button>
-						</template>
-					</el-table-column>
-				</el-table>
+				<el-card class="box-card">
+					<br>
+					<p class="text-center">您可以直接点击您想了解的航空公司的名称跳转至航司详情界面</p>
+					<br>
+					<el-table :data="companies">
+						<el-table-column
+								v-for="item in column"
+								:label="item.label"
+								:prop="item.prop">
+						</el-table-column>
+						<el-table-column label="操作">
+							<template v-slot:default="scope">
+								<el-button type="primary" plain @click="getCompanyDetail(scope.row)">查看航司详情</el-button>
+							</template>
+						</el-table-column>
+					</el-table>
+				</el-card>
 			</el-main>
 		</el-container>
 		<Footer />

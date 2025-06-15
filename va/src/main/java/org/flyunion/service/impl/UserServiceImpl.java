@@ -133,4 +133,9 @@ public class UserServiceImpl implements UserService {
 		}
 		return list;
 	}
+
+	@Override
+	public List<User> getUserByCompany(String company) {
+		return userMapper.getUserByCompany(company);
+	}
 }

@@ -92,5 +92,10 @@ public class UserController {
 	public ResponseEntity<Result<List<User>>> getTopTenUserByLogs(){
 		return ResponseEntity.ok(new Result<>(200, null, userService.getTopTenUserByLogs()));
 	}
+
+	@GetMapping("/getUserByCompany/{company}")
+	public ResponseEntity<Result<List<User>>> getUserByCompany(@PathVariable String company){
+		return ResponseEntity.ok(new Result<>(200, "找到如下数据", userService.getUserByCompany(company)));
+	}
 }
 

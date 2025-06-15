@@ -23,7 +23,8 @@
 										<p>呼号：{{ loginUser.callsign }}</p>
 									</div>
 								</div>
-								
+								<br>
+								<br>
 								<div class="row clearfix">
 									<div class="col-md-4 text-center" >
 										<el-icon><OfficeBuilding /></el-icon>航司
@@ -100,7 +101,6 @@
 								</el-table-column>
 							</el-table>
 							<br>
-							<p class="text-center">实时在线地图</p>
 							<Map/>
 						</el-card>
 					</div>

@@ -30,4 +30,6 @@ public interface UserService {
 	int changePassword(PasswordResetRequest request);
 
 	List<User> getTopTenUserByLogs();
+
+	List<User> getUserByCompany(String company);
 }

@@ -26,10 +26,13 @@ public interface FlightPlanMapper {
 			" and arrival = #{arrival}")
 	List<FlightPlan> getFlightPlanByAll(String departure, String arrival);
 
-	@Insert("insert into flyunion.`flight-plan` value (#{planId}, #{departure}, #{arrival}, #{route})")
+	@Insert("insert into flyunion.`flight-plan` value (#{planId}, #{departure}, #{arrival}, #{route}, #{company})")
 	int newFlightPlan(FlightPlan flightPlan);
 
 	@Update("update flyunion.`flight-plan` set departure = #{departure}, arrival = #{arrival}, " +
 			"route = #{route} where `plan-id` = #{planId}")
 	int updatePlan(FlightPlan flightPlan);
+
+	@Select("select * from flyunion.`flight_plan` where company = #{company}")
+	List<FlightPlan> getPlanByCompany(String company);
 }

@@ -4,6 +4,7 @@ import org.flyunion.entity.Plane;
 import org.flyunion.exception.PlaneExistException;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 抽象的飞机业务
@@ -21,4 +22,6 @@ public interface PlaneService {
 	int addTime(Integer time, String code);
 
 	int planeDestroyed(String code);
+
+	Map<String, List<Plane>> getPlaneByCompany(String company);
 }

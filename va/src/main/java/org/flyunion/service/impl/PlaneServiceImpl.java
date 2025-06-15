@@ -8,7 +8,10 @@ import org.flyunion.service.PlaneService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 飞机业务
@@ -59,5 +62,20 @@ public class PlaneServiceImpl implements PlaneService {
 	@Override
 	public int planeDestroyed(String code) {
 		return planeMapper.planeDestroyed(code);
+	}
+
+	@Override
+	public Map<String, List<Plane>> getPlaneByCompany(String company) {
+		List<Plane> planeList = planeMapper.getPlaneByCompany(company);
+		Map<String, List<Plane>> planeMap = new HashMap<>();
+		for (Plane plane : planeList) {
+			if (!planeMap.containsKey(plane.getFleet())) {
+				planeMap.put(plane.getFleet(), new ArrayList<>());
+				planeMap.get(plane.getFleet()).add(plane);
+			} else {
+				planeMap.get(plane.getFleet()).add(plane);
+			}
+		}
+		return planeMap;
 	}
 }

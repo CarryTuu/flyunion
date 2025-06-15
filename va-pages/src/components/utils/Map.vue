@@ -1,40 +1,66 @@
 <template>
 	<p class="text-center">选中航班信息</p>
-	<el-table>
-		<el-table-column label="航班号">{{ clickedPlane.code }}</el-table-column>
-		<el-table-column label="飞行员">{{ clickedPlane.pilot }}</el-table-column>
-		<el-table-column label="起飞机场">{{ clickedPlane.dep }}</el-table-column>
-		<el-table-column label="落地机场">{{ clickedPlane.arr }}</el-table-column>
-		<el-table-column label="高度">{{ clickedPlane.altitude }}</el-table-column>
-		<el-table-column label="速度">{{ clickedPlane.speed }}</el-table-column>
-	</el-table>
+	<div class="row clearfix">
+		<div class="col-md-12">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>航班号</th>
+						<th>飞行员</th>
+						<th>起飞机场</th>
+						<th>落地机场</th>
+						<th>高度</th>
+						<th>速度</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{{ clickedPlane.code }}</td>
+						<td>{{ clickedPlane.pilot }}</td>
+						<td>{{ clickedPlane.dep }}</td>
+						<td>{{ clickedPlane.arr }}</td>
+						<td>{{ clickedPlane.altitude }}</td>
+						<td>{{ clickedPlane.speed }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 	<div id="mapContainer" class="map-container"></div>
 </template>
 <script>
 
 import initializeMap from "@/utils/MapInitializer.js";
 import mapbox from "mapbox-gl"
+import sqlite from "@/utils/sqlite.js";
 
 export default {
 	data() {
 		return {
+			currentLine: null,
 			map: {},
+			 routeRequest: {
+				dep: "",
+				route: "",
+				arr: ""
+			},
 			path: [],
 			selectedPlane: {},
 			clickedPlane: {},
+			isLineDrawn: false,
 			planes: [
 				{
 					pilot: "100013",
 					code: "MF8000",
-					dep: "ZSAM",
-					arr: "ZSPD",
-					route: "LJG B221 PAMVU V74 BK",
-					speed: "408 kt",
-					altitude: "30158 ft",
-					lng: 121.334508,
-					lat: 29.896228,
+					dep: "ZYTL",
+					arr: "ZSAM",
+					route: "KARPI W5 TAO W174 XDX B221 ODULO V2 HSH G455 PK W116 JTN G204 SHZ B221 LJG A470 ENVEN",
+					speed: "0 kt",
+					altitude: "12 ft",
+					lng: 121.519546508789,
+					lat: 38.9671287536621,
 					planeList: "B737_800",
-					angle: 192
+					angle: 95
 				},
 				{
 					pilot: "100001",
@@ -86,7 +112,55 @@ export default {
 			marker.getElement().addEventListener("click", (e) => {
 				e.stopPropagation()
 				this.clickedPlane = plane
+				this.drawLine(plane)
+				this.currentLine = plane.pilot
+				this.isLineDrawn = true
 			})
+		},
+		async drawLine(plane){
+			if (this.currentLine) {
+				// 如果已经有线存在，删除旧线
+				this.removeLine();
+			}
+			this.routeRequest.dep = plane.dep
+			this.routeRequest.route = plane.route
+			this.routeRequest.arr = plane.arr
+			const res = await sqlite.post("/waypoint/getRoute", this.routeRequest)
+			const coordinate = res.data
+			this.map.addSource("route", {
+				type: "geojson",
+				data: {
+					type: 'Feature',
+					properties: {},
+					geometry: {
+						type: 'LineString',
+						coordinates: coordinate
+					}
+				}
+			});
+			this.map.addLayer({
+				id: "route",
+				source: "route",
+				type: "line",
+				layout: {
+					'line-join': 'round',
+					'line-cap': 'round'
+				},
+				paint: {
+					'line-color': "#2596be",
+					'line-width': 4.5
+				}
+			})
+		},
+		removeLine() {
+			if (this.map.getLayer('route')) {
+				this.map.removeLayer('route');
+			}
+			if (this.map.getSource('route')) {
+				this.map.removeSource('route');
+			}
+			this.isLineDrawn = false;
+			this.currentLine = null;
 		}
 	},
 }
@@ -95,5 +169,8 @@ export default {
 .map-container {
 	width: 100%;
 	height: 750px;
+}
+.table{
+	background-color: rgba(255, 255, 255, 0.65);
 }
 </style>

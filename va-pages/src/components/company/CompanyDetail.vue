@@ -25,6 +25,28 @@
 												:prop="item.prop"
 												:width="item.width"
 										>
+											<template #default="{row}">
+												<!-- 状态列的特殊处理 -->
+												<template v-if="item.prop === 'status'">
+													<el-tag round effect="dark"
+															:type="{
+														        'available': 'success',
+														        'in use': 'primary',
+														        'crashed': 'danger'
+														      }[row.status]"
+													>
+														{{
+															row.status === 'available' ? '可用' :
+																	row.status === 'in use' ? '使用中' :
+																			'已坠毁'
+														}}
+													</el-tag>
+												</template>
+												<!-- 其他列正常显示 -->
+												<template v-else>
+													{{ row[item.prop] }}
+												</template>
+											</template>
 										</el-table-column>
 									</el-table>
 								</el-collapse-item>
@@ -95,12 +117,12 @@ export default {
 						prop: "model"
 					},
 					{
-						label: "当前状态",
-						prop: "status"
-					},
-					{
 						label: "总飞行时长",
 						prop: "time"
+					},
+					{
+						label: "当前状态",
+						prop: "status"
 					}
 				],
 				pilotsTable: [

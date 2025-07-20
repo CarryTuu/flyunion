@@ -1,7 +1,9 @@
 package org.flyunion.controller;
 
 import jakarta.annotation.Nullable;
+import org.flyunion.annotation.SkipAuthentication;
 import org.flyunion.entity.FlightPlan;
+import org.flyunion.entity.request.PlanSearchRequest;
 import org.flyunion.service.FlightPlanService;
 import org.flyunion.utils.Result;
 import org.springframework.http.HttpStatus;
@@ -36,10 +38,9 @@ public class FlightPlanController {
 		return ResponseEntity.ok(new Result<>(200, "找到如下可用航班信息", allPlan));
 	}
 
-	@GetMapping("/{departure}/{arrival}")
-	public ResponseEntity<Result<List<FlightPlan>>> getPlanByQuery(@PathVariable @Nullable String departure,
-																   @PathVariable @Nullable String arrival) {
-		List<FlightPlan> planByQuery = flightPlanService.getPlanByQuery(departure, arrival);
+	@PostMapping("/airport")
+	public ResponseEntity<Result<List<FlightPlan>>> getPlanByQuery(@RequestBody PlanSearchRequest searchForm) {
+		List<FlightPlan> planByQuery = flightPlanService.getPlanByQuery(searchForm.getDeparture(), searchForm.getArrival());
 		if (planByQuery.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new Result<>(404, "未找到任何可用航班", null));
@@ -65,5 +66,11 @@ public class FlightPlanController {
 		}
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 				.body(new Result<>(500, "系统出错，请联系管理员", null));
+	}
+
+	@GetMapping("/query/{company}")
+	public ResponseEntity<Result<List<FlightPlan>>> getPlanByCompany(@PathVariable String company){
+		return ResponseEntity.ok(new Result<>(
+				200, "找到如下数据", flightPlanService.getPlanByCompany(company)));
 	}
 }

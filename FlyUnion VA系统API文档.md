@@ -12,9 +12,9 @@
 
 在IDEA运行配置中添加npm启动项，选择vue项目对应的package.json文件后在脚本中添加dev后点击确定
 
-运行时需要保证nom启动项与SpringBoot启动项均开始运行，启动先后顺序不做限制。
+运行时需要保证npm启动项与SpringBoot启动项均开始运行，启动先后顺序不做限制。
 
-SpringBoot-va项目的端口号为9999，sqlite项目的端口号为9998，vue前端页面的端口号为5173
+SpringBoot-va项目的端口号为9999，sqlite项目的端口号为9998，vue前端页面的端口号为5174
 
 ## 2、实体类信息
 

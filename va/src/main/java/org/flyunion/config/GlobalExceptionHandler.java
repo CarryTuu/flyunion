@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 
@@ -34,8 +35,8 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(e.getStatus()).body(new Result<>(e.getStatus().value(), e.getMessage(), null));
 	}
 
-	@ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-	public ResponseEntity<Result<?>> handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException e) {
+	@ExceptionHandler(SQLException.class)
+	public ResponseEntity<Result<?>> handleSQLException(SQLException e) {
 		log.error("出现异常", e);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Result<>(500, e.getMessage(), null));
 	}

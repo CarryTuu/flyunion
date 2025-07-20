@@ -56,18 +56,23 @@ public class FlightPlanServiceImpl implements FlightPlanService {
 
 	@Override
 	public List<FlightPlan> getPlanByQuery(String departure, String arrival) {
-		if (departure != null) {
-			log.info("department不为空:{}", departure);
-			if (arrival != null) {
-				log.info("arrival不为空:{}", arrival);
+		if (departure != null && !departure.isEmpty()) {
+			log.info("departure:{}", departure);
+			if (arrival != null && !arrival.isEmpty()) {
+				log.info("arrival:{}", arrival);
 				return this.getFlightPlanByAll(departure, arrival);
 			} else {
 				log.info("arrival为空");
 				return this.getFlightPlanByDeparture(departure);
 			}
 		} else {
-			log.info("department为空");
+			log.info("departure为空");
 			return this.getFlightPlanByDestination(arrival);
 		}
+	}
+
+	@Override
+	public List<FlightPlan> getPlanByCompany(String company) {
+		return flightPlanMapper.getPlanByCompany(company);
 	}
 }

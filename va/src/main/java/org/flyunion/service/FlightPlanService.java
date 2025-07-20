@@ -25,4 +25,6 @@ public interface FlightPlanService {
 	int updatePlan(FlightPlan flightPlan);
 
 	List<FlightPlan> getPlanByQuery(String departure, String arrival);
+
+	List<FlightPlan> getPlanByCompany(String company);
 }

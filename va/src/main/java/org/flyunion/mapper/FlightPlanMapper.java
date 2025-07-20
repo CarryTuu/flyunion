@@ -13,23 +13,23 @@ import java.util.List;
 @Repository
 public interface FlightPlanMapper {
 
-	@Select("select * from flyunion.`flight-plan`")
+	@Select("select * from flyunion.`flight_plan`")
 	List<FlightPlan> getAllPlan();
 
-	@Select("select * from flyunion.`flight-plan` where departure = #{departure}")
+	@Select("select * from flyunion.`flight_plan` where departure = #{departure}")
 	List<FlightPlan> getFlightPlanByDeparture(String departure);
 
-	@Select("select * from flyunion.`flight-plan` where arrival = #{arrival}")
+	@Select("select * from flyunion.`flight_plan` where arrival = #{arrival}")
 	List<FlightPlan> getFlightPlanByDestination(String arrival);
 
-	@Select("select * from flyunion.`flight-plan` where departure = #{departure}" +
+	@Select("select * from flyunion.`flight_plan` where departure = #{departure}" +
 			" and arrival = #{arrival}")
 	List<FlightPlan> getFlightPlanByAll(String departure, String arrival);
 
-	@Insert("insert into flyunion.`flight-plan` value (#{planId}, #{departure}, #{arrival}, #{route}, #{company})")
+	@Insert("insert into flyunion.`flight_plan` value (#{planId}, #{departure}, #{arrival}, #{route}, #{company})")
 	int newFlightPlan(FlightPlan flightPlan);
 
-	@Update("update flyunion.`flight-plan` set departure = #{departure}, arrival = #{arrival}, " +
+	@Update("update flyunion.`flight_plan` set departure = #{departure}, arrival = #{arrival}, " +
 			"route = #{route} where `plan-id` = #{planId}")
 	int updatePlan(FlightPlan flightPlan);
 

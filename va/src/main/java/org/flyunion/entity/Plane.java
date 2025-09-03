@@ -24,4 +24,5 @@ public class Plane {
 	private String status;
 	private Integer time;
 	private double durability;
+	private String company;
 }

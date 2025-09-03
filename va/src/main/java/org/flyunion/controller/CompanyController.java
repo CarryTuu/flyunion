@@ -1,5 +1,6 @@
 package org.flyunion.controller;
 
+import org.flyunion.annotation.SkipAuthentication;
 import org.flyunion.entity.Company;
 import org.flyunion.service.CompanyService;
 import org.flyunion.utils.Result;
@@ -31,6 +32,7 @@ public class CompanyController {
 		return ResponseEntity.ok(new Result<>(200, "找到如下航空公司信息！", companyByID));
 	}
 
+	@SkipAuthentication
 	@GetMapping("/all")
 	public ResponseEntity<Result<List<Company>>> getAllCompany(){
 		List<Company> allCompany = companyService.getAllCompany();

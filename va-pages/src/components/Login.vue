@@ -62,6 +62,7 @@
 
 <script>
 import service from "@/utils/va.js";
+import router from "@/utils/router.js";
 
 export default {
 	data() {
@@ -119,8 +120,9 @@ export default {
 					.catch(err => {
 						this.$message.error(err.response.data.message)
 					})
-		}
-	}
+		},
+
+	},
 }
 </script>
 

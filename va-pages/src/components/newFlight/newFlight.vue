@@ -2,11 +2,12 @@
 	<Bar />
 	<div class="common-layout">
 		<el-container>
-			<el-aside width="200px"><Menu/></el-aside>
+			<el-aside width="70px"><Menu/></el-aside>
 			<el-main>
 				<el-card class="box-card">
 					<div class="clearfix">
 						<p class="text-center text-secondary">您可以在当前页面选择航班计划并且添加进您的计划执行表中，计划执行表将在您的主页可见</p>
+						<p class="text-center text-secondary">如需连飞进行航班任务可直接复制航路填写航班计划</p>
 					</div>
 					<div class="clearfix">
 						<p class="text-secondary">您可以在此输入起飞机场或者落地机场，亦可同时输入来精确查询航班</p>
@@ -57,7 +58,8 @@ export default {
 	data(){
 		return {
 			flights:[],
-			user: {},
+			cid: "",
+			company: "",
 			plan: {
 				flightCode: "",
 				departure: "",
@@ -97,13 +99,14 @@ export default {
 	created(){
 		va.get("/user/loadLoginUser")
 				.then(res => {
-					this.user = res.data
+					this.cid = res.data.cid
+					this.company = res.data.company
 					this.getAllFlight()
 				})
 	},
 	methods: {
 		getAllFlight(){
-			va.get("/flightPlan/query/" + this.user.company)
+			va.get("/flightPlan/query/" + this.company)
 					.then(res => {
 						this.flights = res.data
 						this.searchForm.departure = ""
@@ -114,7 +117,7 @@ export default {
 			this.plan.flightCode = row.flightCode
 			this.plan.departure = row.departure
 			this.plan.arrival = row.arrival
-			this.plan.pilot = this.user.cid
+			this.plan.pilot = this.cid
 			va.post("/planList/newPlan", this.plan)
 					.then(res => {
 						this.$notify({

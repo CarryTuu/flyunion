@@ -2,13 +2,19 @@
 	<RouterView/>
 </template>
 <script>
-import Dashboard from "@/components/Dashboard.vue";
-import Map from "@/components/utils/Map.vue"
-import Circle from "@/components/utils/Circle.vue";
+
+import Bar from "@/components/utils/Bar.vue";
+
 export default {
-	components: {Circle, Dashboard, Map},
+	components: {Bar},
 	data() {
-		return {}
+		return {
+		}
 	},
+	methods: {
+
+	},
+	created(){
+	}
 }
 </script>

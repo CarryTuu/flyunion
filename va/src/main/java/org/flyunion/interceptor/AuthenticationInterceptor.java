@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.io.IOException;
+
 /**
  * 验证Token拦截器
  *
@@ -23,27 +25,48 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		if (handler instanceof HandlerMethod handlerMethod) {
-
-			// 检查是否有SkipAuthentication注解
-			if (handlerMethod.getBeanType().isAnnotationPresent(SkipAuthentication.class) ||
-					handlerMethod.getMethod().isAnnotationPresent(SkipAuthentication.class)) {
-				log.info("检测到@SkipAuthentication注解，跳过Token验证拦截器！");
-				return true; // 跳过验证
-			}
-
-			// 从请求头中获取Token
-			String token = request.getHeader("Authorization");
-
-			// 进行Token验证
-			if (token == null || !JwtUtil.validateToken(token)) {
-				log.error("未获取Token或Token已过期！");
-				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-				response.getWriter().write("{\"code\": 401, \n \"message\": \"No Token Detected Or Token Expired\", \n \"data\": null}");
-				return false; // 验证失败，不继续处理请求
-			}
+		// 如果不是控制器方法，直接放行（如静态资源请求）
+		if (!(handler instanceof HandlerMethod handlerMethod)) {
+			return true;
 		}
 
-		return true; // 验证成功或无需验证，继续处理请求
+		// 检查是否有SkipAuthentication注解
+		if (hasSkipAuthenticationAnnotation(handlerMethod)) {
+			log.info("检测到@SkipAuthentication注解，跳过Token验证拦截器！");
+			return true;
+		}
+
+		// 从请求头中获取Token
+		String authHeader = request.getHeader("Authorization");
+
+		// 验证Token格式和有效性
+		if (!isValidToken(authHeader)) {
+			handleUnauthorizedResponse(response);
+			return false;
+		}
+
+		return true;
 	}
-}  
+
+	private boolean hasSkipAuthenticationAnnotation(HandlerMethod handlerMethod) {
+		return handlerMethod.getBeanType().isAnnotationPresent(SkipAuthentication.class) ||
+				handlerMethod.getMethod().isAnnotationPresent(SkipAuthentication.class);
+	}
+
+	private boolean isValidToken(String authHeader) {
+		if (authHeader == null) {
+			return false;
+		}
+		return JwtUtil.validateToken(authHeader);
+	}
+
+	private void handleUnauthorizedResponse(HttpServletResponse response) throws IOException {
+		log.error("未获取Token或Token已过期！");
+		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		response.setContentType("application/json;charset=UTF-8");
+
+		// 使用更结构化的错误响应
+		String errorResponse = "{\"code\": 401, \"message\": \"No Token Detected Or Token Expired\", \"data\": null}";
+		response.getWriter().write(errorResponse);
+	}
+}

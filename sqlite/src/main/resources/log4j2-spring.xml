@@ -1,56 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
+	<Properties>
+		<Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n%throwable</Property>
+		<Property name="LOG_DIR">E:\CODE\SpringBoot\FlyUnion\logs</Property>
+		<Property name="LOG_FILE_NAME">sqlite</Property>
+	</Properties>
+
 	<Appenders>
 		<Console name="Console" target="SYSTEM_OUT">
-			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n%throwable"/>
+			<PatternLayout pattern="${LOG_PATTERN}"/>
 		</Console>
-		<File name="File" fileName="E:\CODE\SpringBoot\FlyUnion\logs\sqlite.log">
-			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n%throwable"/>
-		</File>
+
+		<!-- 使用RollingFileAppender实现按日期和大小滚动 -->
+		<RollingFile name="RollingFile"
+					 fileName="${LOG_DIR}/${LOG_FILE_NAME}.log"
+					 filePattern="${LOG_DIR}/$${date:yyyy-MM}/${LOG_FILE_NAME}-%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout pattern="${LOG_PATTERN}"/>
+			<Policies>
+				<!-- 按时间滚动：每天 -->
+				<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+				<!-- 按大小滚动：10MB -->
+				<SizeBasedTriggeringPolicy size="1MB"/>
+			</Policies>
+			<!-- 最多保留30天的日志文件 -->
+			<DefaultRolloverStrategy max="30"/>
+		</RollingFile>
 	</Appenders>
 
 	<Loggers>
-		<!-- Root logger option 1: log all levels to the console and file -->
+		<!-- Root logger -->
 		<Root level="info">
 			<AppenderRef ref="Console"/>
-			<AppenderRef ref="File"/>
+			<AppenderRef ref="RollingFile"/>
 		</Root>
 
 		<!-- MyBatis logging configuration -->
 		<Logger name="org.apache.ibatis" level="debug" additivity="false">
 			<AppenderRef ref="Console"/>
-			<AppenderRef ref="File"/>
+			<AppenderRef ref="RollingFile"/>
 		</Logger>
 
 		<Logger name="org.mybatis.spring" level="debug" additivity="false">
 			<AppenderRef ref="Console"/>
-			<AppenderRef ref="File"/>
+			<AppenderRef ref="RollingFile"/>
 		</Logger>
 
 		<!-- Spring Boot logging configuration -->
 		<Logger name="org.springframework" level="info" additivity="false">
 			<AppenderRef ref="Console"/>
-			<AppenderRef ref="File"/>
+			<AppenderRef ref="RollingFile"/>
 		</Logger>
 
 		<!-- For detailed error logging -->
 		<Logger name="org.springframework.boot" level="error" additivity="false">
 			<AppenderRef ref="Console"/>
-			<AppenderRef ref="File"/>
+			<AppenderRef ref="RollingFile"/>
 		</Logger>
 
-		<!-- If you want to log SQL statements with parameters and results -->
+		<!-- SQL logging -->
 		<Logger name="java.sql.Connection" level="debug" additivity="false">
 			<AppenderRef ref="Console"/>
-			<AppenderRef ref="File"/>
+			<AppenderRef ref="RollingFile"/>
 		</Logger>
 		<Logger name="java.sql.Statement" level="debug" additivity="false">
 			<AppenderRef ref="Console"/>
-			<AppenderRef ref="File"/>
+			<AppenderRef ref="RollingFile"/>
 		</Logger>
 		<Logger name="java.sql.PreparedStatement" level="debug" additivity="false">
 			<AppenderRef ref="Console"/>
-			<AppenderRef ref="File"/>
+			<AppenderRef ref="RollingFile"/>
 		</Logger>
 	</Loggers>
 </Configuration>

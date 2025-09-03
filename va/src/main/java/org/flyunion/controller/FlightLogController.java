@@ -1,5 +1,6 @@
 package org.flyunion.controller;
 
+import org.apache.ibatis.annotations.Select;
 import org.flyunion.entity.FlightLog;
 import org.flyunion.service.FlightLogService;
 import org.flyunion.utils.Result;
@@ -35,7 +36,7 @@ public class FlightLogController {
 		return ResponseEntity.ok(new Result<>(200, "找到如下航班报告信息", allLog));
 	}
 
-	@GetMapping("/{pilot}")
+	@GetMapping("/pilot/{pilot}")
 	public ResponseEntity<Result<List<FlightLog>>> getLogByPilot(@PathVariable int pilot) {
 		List<FlightLog> logByPilot = flightLogService.getLogByPilot(pilot);
 		if (logByPilot.isEmpty()) {
@@ -45,7 +46,7 @@ public class FlightLogController {
 		return ResponseEntity.ok(new Result<>(200, "找到如下航班报告信息", logByPilot));
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/id/{id}")
 	public ResponseEntity<Result<FlightLog>> getLogById(@PathVariable String id) {
 		FlightLog log = flightLogService.getLogById(id);
 		if (log == null) {
@@ -64,5 +65,14 @@ public class FlightLogController {
 		}
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 				.body(new Result<>(500, "出现错误，请重新提交或联系系统管理员", flightLog.getId()));
+	}
+
+	@GetMapping("/plane/{plane}")
+	public ResponseEntity<Result<List<FlightLog>>> getLogByPlane(@PathVariable String plane){
+		List<FlightLog> logByPlane = flightLogService.getLogByPlane(plane);
+		if(logByPlane.isEmpty()){
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Result<>(404, "未找到相关数据", null));
+		}
+		return ResponseEntity.ok(new Result<>(200, "找到如下符合条件的数据", logByPlane));
 	}
 }

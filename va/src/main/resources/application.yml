@@ -28,6 +28,13 @@ spring:
             test-while-idle: true
             test-on-borrow: true
             test-on-return: false
+    data:
+        redis:
+            port: 6379
+            password:
+            database: 0
+            timeout: 3000ms
+            host: localhost
 server:
     port: 9999
 mybatis:
@@ -39,4 +46,9 @@ logging:
     level:
         org.flyunion.mapper: debug
         org.apache.ibatis.logging: debug
+redis:
+    verify:
+        captchaKey: "captcha:"
+        tokenKey: "token:"
+
         

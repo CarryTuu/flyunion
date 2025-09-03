@@ -19,4 +19,6 @@ public interface FlightLogService {
 
 	int newLog(FlightLog flightLog);
 
+	List<FlightLog> getLogByPlane(String plane);
+
 }

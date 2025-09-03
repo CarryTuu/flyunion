@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * flight-log实体类
@@ -23,7 +23,8 @@ public class FlightLog {
 	private String code;
 	private String plane;
 	private int pilot;
-	private Date date;
+	private LocalDateTime date;
+	private String formattedTime;
 	private int rate;
 	private double oil;
 

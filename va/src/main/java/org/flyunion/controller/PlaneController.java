@@ -27,7 +27,7 @@ public class PlaneController {
 		this.planeService = planeService;
 	}
 
-	@GetMapping("/{code}")
+	@GetMapping("/code/{code}")
 	public ResponseEntity<Result<Plane>> getPlaneByCode(@PathVariable String code) {
 		Plane plane = planeService.getPlaneByCode(code);
 		return plane == null ? ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Result<>(404, "未找到符合条件的航空器！", null)) :

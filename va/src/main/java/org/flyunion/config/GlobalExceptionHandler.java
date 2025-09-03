@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.net.ConnectException;
 import java.sql.SQLException;
 
 
@@ -40,4 +41,9 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Result<>(500, e.getMessage(), null));
 	}
 
+	@ExceptionHandler(ConnectException.class)
+	public ResponseEntity<Result<?>> handleConnectException(ConnectException e){
+		log.error("出现异常", e);
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Result<>(500, e.getMessage(), null));
+	}
 }

@@ -1,10 +1,10 @@
 package org.flyunion.service.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.flyunion.exception.CaptchaExistException;
 import org.flyunion.exception.IncorrectCaptchaException;
 import org.flyunion.utils.CaptchaGenerator;
-import org.flyunion.utils.UUIDGenerator;
-import org.springframework.cache.Cache;
+import org.flyunion.utils.RedisUtil;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
@@ -23,32 +23,24 @@ import java.util.Objects;
 @Service
 public class CaptchaService {
 	private static final int CAPTCHA_LENGTH = 5;
-	private static final String CAPTCHA_CACHE_NAME = "captchaCache";
 
-	private final CacheManager cacheManager;
-
+	private final RedisUtil redisUtil;
 	private final JavaMailSender mailSender;
 
-	public CaptchaService(CacheManager cacheManager, JavaMailSender mailSender) {
-		this.cacheManager = cacheManager;
+	public CaptchaService(RedisUtil redisUtil, JavaMailSender mailSender) {
+		this.redisUtil = redisUtil;
 		this.mailSender = mailSender;
 	}
 
-	public String generateAndSendCaptcha(String email) {
+	public void generateAndSendCaptcha(String email) {
 		log.info("开始生成长度为{}的验证码", CAPTCHA_LENGTH);
 		String captcha = CaptchaGenerator.generateCaptcha(CAPTCHA_LENGTH);
-		log.info("生成的验证码为：{}， 开始生成验证码对应的key", captcha);
-		String captchaKey = UUIDGenerator.getId();
-		log.info("生成验证码对应的key：{}，开始将验证码key与验证码在内存中进行暂存", captchaKey);
+		log.info("生成的验证码为：{}", captcha);
 
-		Cache cache = cacheManager.getCache(CAPTCHA_CACHE_NAME);
-		if (cache != null) {
-			cache.put(captchaKey, captcha);
-			log.info("存入验证码组合：key: {}，captcha: {}", captchaKey, captcha);
-		}
+		redisUtil.storeCaptcha(email, captcha);
+
 		log.info("验证码存入完毕，准备发送邮件！");
 		sendCaptchaEmail(email, captcha);
-		return captchaKey;
 	}
 
 	private void sendCaptchaEmail(String email, String captcha) {
@@ -62,27 +54,14 @@ public class CaptchaService {
 		log.info("邮件已经由hinakongqi303@gmail.com发送至{}", email);
 	}
 
-	public boolean verifyCaptcha(String captchaKey, String inputCaptcha) throws IncorrectCaptchaException {
-		log.info("开始比对输入的验证码与存储的验证码是否一致，验证码key: {}", captchaKey);
-		Cache cache = cacheManager.getCache(CAPTCHA_CACHE_NAME);
-		Cache.ValueWrapper valueWrapper;
-		String storedCaptcha;
-		if (cache != null) {
-			valueWrapper = Objects.requireNonNull(cache.get(captchaKey));
-			storedCaptcha = (String) valueWrapper.get();
-			log.info("获得缓存中存储的验证码：{}，开始比较", storedCaptcha);
-		} else {
-			log.error("缓存中不存在名为{}的数据", CAPTCHA_CACHE_NAME);
-			return false;
-		}
-
-		if (storedCaptcha != null && storedCaptcha.equals(inputCaptcha)) {
-			log.info("比较完毕，验证码正确！从缓存中移除该验证码！");
-			cache.evict(captchaKey);
+	public boolean verifyCaptcha(String email, String inputCaptcha) throws IncorrectCaptchaException, CaptchaExistException {
+		log.info("开始比对输入的验证码与存储的验证码是否一致");
+		String captcha = redisUtil.getCaptcha(email);
+		if(inputCaptcha.equals(captcha)){
+			redisUtil.deleteCaptcha(email);
 			return true;
-		} else {
-			log.error("验证码填写不正确！");
-			throw new IncorrectCaptchaException("验证码不正确！", HttpStatus.BAD_REQUEST);
+		}else{
+			throw new IncorrectCaptchaException("验证码输入错误！请重新输入！", HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 	}
 }

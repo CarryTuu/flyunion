@@ -29,4 +29,7 @@ public interface FlightLogMapper {
 	@Insert("insert into flyunion.`flight-log` value " +
 			"(#{id}, #{code}, #{plane}, #{pilot}, curdate(), #{rate}, #{oil})")
 	int newLog(FlightLog flightLog);
+
+	@Select("select * from flyunion.flight_log where plane = #{pilot}")
+	List<FlightLog> getLogByPlane(String plane);
 }

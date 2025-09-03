@@ -4,17 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.flyunion.entity.Company;
 import org.flyunion.entity.User;
 import org.flyunion.entity.request.PasswordResetRequest;
-import org.flyunion.exception.IncorrectPasswordException;
-import org.flyunion.exception.UserBannedException;
-import org.flyunion.exception.UserExistException;
-import org.flyunion.exception.UserNotFoundException;
+import org.flyunion.exception.*;
 import org.flyunion.mapper.CompanyMapper;
 import org.flyunion.mapper.UserMapper;
 import org.flyunion.service.UserService;
 import org.flyunion.utils.JwtUtil;
 import org.flyunion.utils.PasswordEncoder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.flyunion.utils.RedisUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -32,10 +28,12 @@ public class UserServiceImpl implements UserService {
 
 	private final UserMapper userMapper;
 	private final CompanyMapper companyMapper;
+	private final RedisUtil redisUtil;
 
-	public UserServiceImpl(UserMapper userMapper, CompanyMapper companyMapper) {
+	public UserServiceImpl(UserMapper userMapper, CompanyMapper companyMapper, RedisUtil redisUtil) {
 		this.userMapper = userMapper;
 		this.companyMapper = companyMapper;
+		this.redisUtil = redisUtil;
 	}
 
 	@Override
@@ -50,17 +48,19 @@ public class UserServiceImpl implements UserService {
 					throw new UserBannedException("用户" + user.getCid() + "已经被封禁，如为误封请联系管理员！", HttpStatus.FORBIDDEN);
 				}
 				log.info("密码信息校对正确，登录用户身份已验证：{}，开始生成token", user.getCid());
-				return JwtUtil.generateTokenByCID(userFromDB.getCid());
+				String token = JwtUtil.generateTokenByCID(userFromDB.getCid());
+				redisUtil.storeToken(userFromDB.getCid(), token);
+				return token;
 			}
 			log.error("密码信息校对失败，登录用户身份验证失败！");
-			throw new IncorrectPasswordException("密码输入不正确！", HttpStatus.UNAUTHORIZED);
+			throw new IncorrectPasswordException("密码输入不正确！", HttpStatus.BAD_REQUEST);
 		}
 		log.error("CID验证失败，用户不存在！登录用户身份验证失败");
 		throw new UserNotFoundException("用户" + user.getCid() + "不存在！", HttpStatus.NOT_FOUND);
 	}
 
 	@Override
-	public int register(User user) throws UserExistException {
+	public String register(User user) throws UserExistException {
 		log.info("====================注册功能开始====================");
 		log.info("检验当前注册的CID是否存在：{}", user.getCid());
 		if (userMapper.loadUserByCid(user.getCid()) == null) {
@@ -75,10 +75,11 @@ public class UserServiceImpl implements UserService {
 			int result = userMapper.register(user);
 			if (result > 0) {
 				log.info("注册成功！");
-				return result;
+				String token = JwtUtil.generateTokenByCID(user.getCid());
+				redisUtil.storeToken(user.getCid(), token);
 			}
 			log.error("注册出现错误，请查阅下方具体报错信息！");
-			return 0;
+			return "注册错误！";
 		}
 		log.error("当前CID：{}已存在于系统中！", user.getCid());
 		throw new UserExistException("用户" + user.getCid() + "已经存在，若忘记密码，请进入帮助中心！", HttpStatus.CONFLICT);
@@ -96,10 +97,12 @@ public class UserServiceImpl implements UserService {
 					throw new UserBannedException("用户" + user.getEmail() + "已经被封禁，如为误封请联系管理员！", HttpStatus.FORBIDDEN);
 				}
 				log.info("密码信息校对正确，登录用户身份已验证：{}，开始生成token", user.getEmail());
-				return JwtUtil.generateTokenByEmail(userFromDB.getEmail());
+				String token = JwtUtil.generateTokenByEmail(userFromDB.getEmail());
+				redisUtil.storeToken(userFromDB.getEmail(), token);
+				return token;
 			}
 			log.error("密码信息校对失败，登录用户身份验证失败！");
-			throw new IncorrectPasswordException("密码输入不正确！", HttpStatus.UNAUTHORIZED);
+			throw new IncorrectPasswordException("密码输入不正确！", HttpStatus.BAD_REQUEST);
 		}
 		log.error("email验证失败，用户不存在！登录用户身份验证失败");
 		throw new UserNotFoundException("用户" + user.getEmail() + "不存在！", HttpStatus.NOT_FOUND);
@@ -137,5 +140,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<User> getUserByCompany(String company) {
 		return userMapper.getUserByCompany(company);
+	}
+
+	@Override
+	public void logOut(String token) throws TokenExpiredException {
+		redisUtil.deleteToken(JwtUtil.getCidFromToken(token));
+		JwtUtil.addBlackList(token);
 	}
 }

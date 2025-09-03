@@ -25,7 +25,7 @@ public interface PlaneMapper {
 	@Select("select * from flyunion.plane where owner = #{cid}")
 	List<Plane> getPlanesByUser(Integer cid);
 
-	@Insert("insert into flyunion.plane value (#{code}, #{owner}, #{fleet}, #{model},'available', 0, 100.00)")
+	@Insert("insert into flyunion.plane value (#{code}, #{owner}, #{fleet}, #{model},'available', 0, 100.00, #{company})")
 	int newPlane(Plane plane);
 
 	@Update("update flyunion.plane set time = time + #{time} where code = #{code}")

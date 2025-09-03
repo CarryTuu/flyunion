@@ -3,13 +3,11 @@ package org.flyunion.controller;
 import org.flyunion.annotation.SkipAuthentication;
 import org.flyunion.entity.User;
 import org.flyunion.entity.request.PasswordResetRequest;
-import org.flyunion.exception.IncorrectPasswordException;
-import org.flyunion.exception.UserBannedException;
-import org.flyunion.exception.UserExistException;
-import org.flyunion.exception.UserNotFoundException;
+import org.flyunion.exception.*;
 import org.flyunion.service.UserService;
 import org.flyunion.utils.JwtUtil;
 import org.flyunion.utils.Result;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -52,10 +50,8 @@ public class UserController {
 	@PostMapping("/register")
 	@SkipAuthentication
 	public ResponseEntity<Result<String>> register(@RequestBody User user) throws UserExistException {
-		int register = userService.register(user);
-		return register <= 0 ? ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-				.body(new Result<>(500, "注册出现未知错误", null)) :
-				ResponseEntity.ok(new Result<>(200, "注册成功！", JwtUtil.generateTokenByCID(user.getCid())));
+		String token = userService.register(user);
+		return ResponseEntity.ok(new Result<>(200, "注册成功！", token));
 
 	}
 
@@ -96,6 +92,12 @@ public class UserController {
 	@GetMapping("/getUserByCompany/{company}")
 	public ResponseEntity<Result<List<User>>> getUserByCompany(@PathVariable String company){
 		return ResponseEntity.ok(new Result<>(200, "找到如下数据", userService.getUserByCompany(company)));
+	}
+
+	@PutMapping("/logOut")
+	public ResponseEntity<Result<?>> logOut(@RequestHeader("Authorization") String token) throws TokenExpiredException {
+		userService.logOut(token);
+		return ResponseEntity.ok(new Result<>(200, "退出登陆成功", null));
 	}
 }
 

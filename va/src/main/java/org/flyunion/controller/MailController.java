@@ -2,6 +2,7 @@ package org.flyunion.controller;
 
 import org.flyunion.annotation.SkipAuthentication;
 import org.flyunion.entity.request.CaptchaRequest;
+import org.flyunion.exception.CaptchaExistException;
 import org.flyunion.exception.IncorrectCaptchaException;
 import org.flyunion.service.service.CaptchaService;
 import org.flyunion.utils.Result;
@@ -28,14 +29,14 @@ public class MailController {
 	@SkipAuthentication
 	@PostMapping("/sendCaptcha/{email}")
 	public ResponseEntity<Result<String>> generateAndSendEmail(@PathVariable String email) {
-		String s = captchaService.generateAndSendCaptcha(email);
-		return ResponseEntity.ok(new Result<>(200, "验证码发送成功", s));
+		captchaService.generateAndSendCaptcha(email);
+		return ResponseEntity.ok(new Result<>(200, "验证码发送成功", null));
 	}
 
 	@SkipAuthentication
 	@PostMapping("/verifyCaptcha")
-	public ResponseEntity<Result<String>> verifyCaptcha(@RequestBody CaptchaRequest request) throws IncorrectCaptchaException {
-		boolean b = captchaService.verifyCaptcha(request.getCaptchaKey(), request.getInputCaptcha());
+	public ResponseEntity<Result<String>> verifyCaptcha(@RequestBody CaptchaRequest request) throws IncorrectCaptchaException, CaptchaExistException {
+		boolean b = captchaService.verifyCaptcha(request.getEmail(), request.getInputCaptcha());
 		if (b) {
 			return ResponseEntity.ok(new Result<>(200, "验证码验证成功！", null));
 		}

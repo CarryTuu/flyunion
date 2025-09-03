@@ -2,7 +2,7 @@
 	<Bar/>
 	<div class="common-layout">
 		<el-container>
-			<el-aside width="200px"><Menu /></el-aside>
+			<el-aside width="70px"><Menu /></el-aside>
 			<el-main>
 				<el-card class="box-card">
 					<br>

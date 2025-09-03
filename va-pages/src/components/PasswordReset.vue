@@ -49,8 +49,8 @@ export default {
 		return {
 			passwordResetForm: {
 				password: "",
-				confirm: ""
-				// email: JSON.parse(localStorage.getItem("email"))
+				confirm: "",
+				email: JSON.parse(localStorage.getItem("email"))
 			},
 			rules: {
 				pwdModify: [

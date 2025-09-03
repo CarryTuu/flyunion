@@ -19,7 +19,7 @@
 					</li>
 				</ul>
 				<Clock />
-				<span class="text-secondary" style="margin-right: 20px">欢迎您 {{ loginUser.userName }}！</span>
+				<span class="text-secondary" v-if="!loginUser === null" style="margin-right: 20px">欢迎您 {{ loginUser.userName }}！</span>
 				<el-button plain type="primary" style="margin-right: 20px">退出登录</el-button>
 			</div>
 		</div>

@@ -3,8 +3,11 @@ package org.flyunion.controller;
 import org.flyunion.entity.PlannedFlight;
 import org.flyunion.service.PlannedFlightService;
 import org.flyunion.utils.Result;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/plannedFlight")
@@ -32,5 +35,12 @@ public class PlannedFlightController {
 	public ResponseEntity<Result<?>> deletePlan(@PathVariable String id){
 		return ResponseEntity.ok(new Result<>(200, "状态已更改为已完成",
 				plannedFlightService.deletePlan(id)));
+	}
+
+	@GetMapping("/{cid}")
+	public ResponseEntity<Result<List<PlannedFlight>>> getPlannedFlightByUser(@PathVariable String cid){
+		List<PlannedFlight> plannedFlightByUser = plannedFlightService.getPlannedFlightByUser(cid);
+		return !plannedFlightByUser.isEmpty() ? ResponseEntity.ok(new Result<>(200, "找到如下数据", plannedFlightByUser)) :
+				ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Result<>(404, "未找到符合条件的数据", null));
 	}
 }

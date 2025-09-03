@@ -2,7 +2,7 @@
 	<Bar/>
 	<div class="common-layout">
 		<el-container>
-			<el-aside width="200px"><Menu /></el-aside>
+			<el-aside width="70px"><Menu /></el-aside>
 			<el-main>
 				<div class="row clearfix">
 					<div class="col-md-4">
@@ -90,6 +90,25 @@
 					<div class="col-md-12">
 						<el-card class="box-card-large">
 							<div slot="header">
+								<p>已计划航班列表</p>
+							</div>
+							<el-table :data="plannedFlight">
+								<el-table-column
+										v-for="item in column.plannedFlight"
+										:key="item.prop"
+										:label="item.label"
+										:prop="item.prop"
+										:width="item.width">
+								</el-table-column>
+							</el-table>
+						</el-card>
+					</div>
+				</div>
+				<br>
+				<div class="row clearfix">
+					<div class="col-md-12">
+						<el-card class="box-card-large">
+							<div slot="header">
 								<p>航班信息大屏</p>
 							</div>
 							<p class="text-center">实时在线航班</p>
@@ -131,7 +150,30 @@ export default {
 			companyName: "",
 			job: "",
 			topTenList: [],
+			plannedFlight: [],
 			column: {
+				plannedFlight: [
+					{
+						label: "航班号",
+						prop: "flightCode"
+					},
+					{
+						label: "起飞机场",
+						prop: "departure"
+					},
+					{
+						label: "落地机场",
+						prop: "arrival"
+					},
+					{
+						label: "计划时间",
+						prop: "formattedTime"
+					},
+					{
+						label: "当前状态",
+						prop: "status"
+					}
+				],
 				topTen: [
 					{
 						label: "昵称",
@@ -226,6 +268,7 @@ export default {
 	methods: {
 		async loadLoginUser() {
 			const res = await va.get("/user/loadLoginUser");
+			res.data.password = "********"
 			this.loginUser = res.data;
 			this.avatar = "https://q.qlogo.cn/headimg_dl?dst_uin=" + this.loginUser.qq + "&spec=100&img_type=jpg";
 			this.job = PositionMapper.getPosition(this.loginUser.job);
@@ -241,11 +284,18 @@ export default {
 					.then(res => {
 						this.topTenList = res.data
 					})
+		},
+		getPlannedFlight(){
+			va.get("/plannedFlight/" + this.loginUser.cid)
+					.then(res => {
+						this.plannedFlight = res.data
+					})
 		}
 	},
 	async created() {
 		await this.loadLoginUser()
 		this.getTopTen()
+		this.getPlannedFlight()
 	}
 }
 </script>

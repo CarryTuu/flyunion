@@ -1,64 +1,124 @@
 <template>
-	<el-menu
-			default-active="2"
-			class="el-menu-vertical-demo"
-			:collapse="isCollapse"
-			style="background: rgba(255, 255, 255, 0.65)"
-	>
-		<el-menu-item index="1">
-			<el-icon><OfficeBuilding /></el-icon>
-			<template #title><a href="/Company" class="href">航空公司</a></template>
-		</el-menu-item>
-		<el-menu-item index="2">
-			<el-icon><Menu /></el-icon>
-			<template #title><a href="/newFlight" class="href">开始新航班</a></template>
-		</el-menu-item>
-		<el-menu-item index="3">
-			<el-icon><document /></el-icon>
-			<template #title>Navigator Three</template>
-		</el-menu-item>
-		<el-menu-item index="4">
-			<el-icon><setting /></el-icon>
-			<template #title>Navigator Four</template>
-		</el-menu-item>
-		<el-menu-item @click="toggleCollapse">
-			<el-icon>
-				<component :is="isCollapse ? 'Expand' : 'Fold'" />
-			</el-icon>
-			<template #title>
-				{{ isCollapse ? '展开菜单' : '折叠菜单' }}
-			</template>
-		</el-menu-item>
+	<!-- 侧边栏菜单 -->
+	<el-menu class="el-menu" mode="vertical">
+		<!-- 遍历菜单项，生成带有图标的菜单 -->
+		<el-tooltip
+				v-for="item in menuItems"
+				:key="item.index"
+				class="box-item"
+				effect="dark"
+				:content="item.content"
+				placement="right"
+		>
+			<el-menu-item :index="item.index" @click="navigateTo(item.path)">
+				<el-icon class="icon-container">
+					<box-icon
+							color="#657792"
+							:type="item.icon.includes('-') ? 'solid' : ''"
+							:name="item.icon"
+					></box-icon>
+				</el-icon>
+			</el-menu-item>
+		</el-tooltip>
 	</el-menu>
 </template>
-<script>
-import {Menu, Setting, Location, Document, OfficeBuilding} from "@element-plus/icons-vue";
 
+<script>
+import va from "@/utils/va.js";
+
+/**
+ * 侧边栏组件定义
+ * 该组件包含了一个垂直菜单，用于导航和展示菜单项
+ */
 export default {
-	components: {
-		Location, Menu, Setting, Document, OfficeBuilding
-	},
-	name: 'SidebarMenu',
+	
+	// 组件数据
 	data() {
 		return {
-			isCollapse: false
-		}
+			// 当前激活的菜单项索引
+			// 菜单项列表，包含各个菜单项的索引、路径、图标和内容
+			menuItems: [
+				{ index: '1', path: '/Dashboard', icon: 'home', content: '主页' },
+				{ index: '2', path: '/Company', icon: 'buildings', content: '航空公司' },
+				{ index: '3', path: '/NewFlight', icon: 'plane-take-off', content: '新航班选择' },
+				{ index: '4', path: '/PlaneList', icon: 'plane-alt', content: '航空器' },
+				{ index: '5', path: '/logOut', icon: 'log-out', content: '退出登录' },
+			]
+		};
 	},
+	
+	// 组件方法
 	methods: {
-		toggleCollapse() {
-			this.isCollapse = !this.isCollapse
+		/**
+		 * 处理菜单项选择事件
+		 * @param {string} index - 被选中菜单项的索引
+		 */
+		
+		/**
+		 * 导航到指定路径
+		 * @param {string} path - 目标路径
+		 */
+		navigateTo(path) {
+			if(path === "/logOut"){
+				va.put("/user/logOut")
+						.then(() => {
+							localStorage.removeItem("loginUser")
+							this.$message.success("退出登录成功！")
+							this.$router.push("/")
+						})
+			}else {
+				this.$router.push(path);
+			}
 		},
+		
+		/**
+		 * 退出登录，导航到登录页面
+		 */
 	}
-}
+	
+};
 </script>
 
-<style>
-.el-menu-vertical-demo:not(.el-menu--collapse) {
-	width: 200px;
-	min-height: 700px;
+
+
+<style scoped>
+/* 侧边栏菜单样式 */
+.el-menu {
+	height: 100vh;
+	width: 60px;
+	background-color: rgb(244, 243, 243);
+	padding-top: 10px;
+	display: flex;
+	flex-direction: column;
 }
-.href{
-	text-decoration: none;
-	color: #000;
+
+/* 底部元素样式，使其自动推到底部 */
+.bottom {
+	margin-top: auto;
+	margin-bottom: 50px;
+}
+
+/* 菜单项样式 */
+.el-menu-item {
+	display: flex;
+	justify-content: center;
+	margin: 10px 12px;
+}
+
+/* 图标容器样式 */
+.icon-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: 8px;
+	transition: background-color 0.3s ease;
+}
+
+/* 激活状态的菜单项样式 */
+.active-menu .icon-container {
+	background-color: #1f2b3b;
+	color: white;
 }
 </style>

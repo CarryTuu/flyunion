@@ -52,7 +52,7 @@ export default {
 			},
 			captchaForm: {
 				inputCaptcha: "",
-				captchaKey: "",
+				email: ""
 			}
 		}
 	},
@@ -75,22 +75,18 @@ export default {
 						}
 					}, 1000);
 					service.post("/mail/sendCaptcha/" + this.form.email)
-							.then(res => {
-								localStorage.setItem("captchaKey", JSON.stringify(res.data))
-							})
 				}
 			}
 		},
 		verifyCaptcha() {
-			this.captchaForm.captchaKey = JSON.parse(localStorage.getItem("captchaKey"))
+			this.captchaForm.email = this.form.email
 			service.post("/mail/verifyCaptcha", this.captchaForm)
 					.then(res => {
 						this.$message.success(res.message + "三秒后跳转到重置密码界面")
-						localStorage.removeItem("captchaKey")
 						localStorage.setItem("email", JSON.stringify(this.form.email))
 						setTimeout(() => {
-							// this.$router.post("/PasswordReset")
-							this.$message.success("跳转了")
+							console.log(this.captchaForm.email)
+							this.$router.post("/PasswordReset")
 						}, 3000)
 					})
 		}

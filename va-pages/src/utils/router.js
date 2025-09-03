@@ -6,7 +6,9 @@ import PasswordReset from "@/components/PasswordReset.vue";
 import Dashboard from "@/components/Dashboard.vue";
 import CompanyList from "@/components/company/CompanyList.vue";
 import CompanyDetail from "@/components/company/CompanyDetail.vue";
-import newFlight from "@/components/newFlight/newFlight.vue";
+import PlaneList from "@/components/Plane/PlaneList.vue";
+import PlaneDetail from "@/components/Plane/PlaneDetail.vue";
+import NewFlight from "@/components/newFlight/newFlight.vue";
 
 const routes = [
     {
@@ -39,8 +41,17 @@ const routes = [
         component: CompanyDetail
     },
     {
-        path: "/newFlight",
-        component: newFlight
+        path: "/NewFlight",
+        component: NewFlight
+    },
+    {
+        path: "/PlaneList",
+        component: PlaneList
+    },
+    {
+        path: "/PlaneDetail/:code",
+        component: PlaneDetail,
+        name: "PlaneDetail"
     }
 ]
 

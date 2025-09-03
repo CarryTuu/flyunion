@@ -7,9 +7,7 @@ import org.flyunion.exception.TokenExpiredException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * JWT工具
@@ -19,36 +17,43 @@ import java.util.Map;
  */
 
 public class JwtUtil {
-	private static final String SECRET_KEY = "flyunion100013"; // 用于签名的密钥
+
+	private static final String SECRET_KEY = "flyunion100013";// 用于签名的密钥
+	private static final int EXPIRE_TIME = 24 * 60 * 60 * 1000;
 	private static final Logger log = LoggerFactory.getLogger(JwtUtil.class);
+	private static final Set<String> tokenBlacklist = Collections.synchronizedSet(new HashSet<>());
 
 	// 生成JWT
 	public static String generateTokenByCID(String cid) {
+		Date now = new Date();
+		Date expireDate = new Date(now.getTime() + EXPIRE_TIME);
 		log.info("开始生成token，登录用户: {}", cid);
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("cid", cid);
 
 		String token = Jwts.builder()
 				.setClaims(claims)
-				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 1440))
+				.setExpiration(expireDate)
 				.signWith(SignatureAlgorithm.HS512, SECRET_KEY)
 				.compact();
-		log.info("token生成完毕: {}，有效时间为三十分钟", token);
+		log.info("token生成完毕: {}，有效时间为十五分钟", token);
 		return token;
 	}
 
 	// 生成JWT
 	public static String generateTokenByEmail(String email) {
+		Date now = new Date();
+		Date expireDate = new Date(now.getTime() + EXPIRE_TIME);
 		log.info("开始生成token，登录用户: {}", email);
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("email", email);
 
 		String token = Jwts.builder()
 				.setClaims(claims)
-				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
+				.setExpiration(expireDate)
 				.signWith(SignatureAlgorithm.HS512, SECRET_KEY)
 				.compact();
-		log.info("token生成完毕: {}，有效时间为三十分钟", token);
+		log.info("token生成完毕: {}，有效时间为十五分钟", token);
 		return token;
 	}
 
@@ -67,6 +72,10 @@ public class JwtUtil {
 	// 验证JWT是否有效
 	public static boolean validateToken(String token) {
 		try {
+			if (tokenBlacklist.contains(token)) {
+				log.warn("Token已被加入黑名单: {}", token);
+				return false;
+			}
 			Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
 			return true;
 		} catch (Exception e) {
@@ -88,5 +97,33 @@ public class JwtUtil {
 			throw new TokenExpiredException("Token已经过期！请重新登录");
 		}
 	}
+	/**将token加入黑名单*/
+	public static void addBlackList(String token){
+		tokenBlacklist.add(token);
+	}
 
+	public static void cleanExpiredBlacklistedTokens() {
+		synchronized (tokenBlacklist) {
+			Iterator<String> iterator = tokenBlacklist.iterator();
+			while (iterator.hasNext()) {
+				String token = iterator.next();
+				try {
+					// 如果Token已过期，从黑名单中移除
+					Claims claims = Jwts.parser()
+							.setSigningKey(SECRET_KEY)
+							.parseClaimsJws(token)
+							.getBody();
+
+					if (claims.getExpiration().before(new Date())) {
+						iterator.remove();
+						log.info("清理过期的黑名单Token: {}", token);
+					}
+				} catch (Exception e) {
+					// 解析失败的Token（可能是格式错误），从黑名单中移除
+					iterator.remove();
+					log.info("清理无效的黑名单Token: {}", token);
+				}
+			}
+		}
+	}
 }

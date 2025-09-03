@@ -11,15 +11,12 @@ import java.time.LocalDateTime;
 @Component
 @NoArgsConstructor
 @AllArgsConstructor
-public class PlannedFlight {
+public class MaintainingRecord {
 
 	private String id;
-	private String flightCode;
-	private String departure;
-	private String arrival;
-	private String pilot;
-	private LocalDateTime plannedTime;
+	private String code;
+	private String type;
+	private LocalDateTime date;
 	private String formattedTime;
-	private String status;
 
 }

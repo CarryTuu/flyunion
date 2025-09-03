@@ -2,10 +2,7 @@ package org.flyunion.service;
 
 import org.flyunion.entity.User;
 import org.flyunion.entity.request.PasswordResetRequest;
-import org.flyunion.exception.IncorrectPasswordException;
-import org.flyunion.exception.UserBannedException;
-import org.flyunion.exception.UserExistException;
-import org.flyunion.exception.UserNotFoundException;
+import org.flyunion.exception.*;
 
 import java.util.List;
 
@@ -19,7 +16,7 @@ public interface UserService {
 
 	String loginByUsername(User user) throws IncorrectPasswordException, UserNotFoundException, UserBannedException;
 
-	int register(User user) throws UserExistException;
+	String register(User user) throws UserExistException;
 
 	String loginByEmail(User user) throws IncorrectPasswordException, UserNotFoundException, UserBannedException;
 
@@ -32,4 +29,6 @@ public interface UserService {
 	List<User> getTopTenUserByLogs();
 
 	List<User> getUserByCompany(String company);
+
+	void logOut(String cid) throws TokenExpiredException;
 }

@@ -18,6 +18,6 @@ import org.springframework.stereotype.Component;
 public class CaptchaRequest {
 
 	private String inputCaptcha;
-	private String captchaKey;
+	private String email;
 
 }

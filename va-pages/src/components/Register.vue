@@ -46,8 +46,7 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item>
-						<el-button plain round style="width: 420px" type="primary" @click="register">确认注册
-						</el-button>
+						<el-button plain round style="width: 420px" type="primary" @click="register">确认注册</el-button>
 					</el-form-item>
 				</el-form>
 				<br>
@@ -83,7 +82,7 @@ export default {
 				confirm: "",
 				email: "",
 				qq: "",
-				company: ""
+					company: ""
 			},
 			rules: {
 				pwdModify: [
@@ -100,8 +99,8 @@ export default {
 						this.$message.success(res.message)
 						localStorage.setItem("loginUser", res.data)
 						setTimeout(() => {
-							// this.$router.push("/Dashboard")
 							this.$message.success("跳转成功")
+							this.$router.push("/Dashboard")
 						}, 3000)
 					})
 		},

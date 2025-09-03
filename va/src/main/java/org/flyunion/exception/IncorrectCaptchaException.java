@@ -10,6 +10,6 @@ import org.springframework.http.HttpStatus;
  */
 public class IncorrectCaptchaException extends BaseException {
 	public IncorrectCaptchaException(String message, HttpStatus status) {
-		super(message, status);
+		super(message,status);
 	}
 }

@@ -9,7 +9,7 @@
 						<el-card class="box-card">
 							<div slot="header" class="clearfix">
 								<span>个人信息</span>
-								<el-link style="float: right; padding: 3px; font-size: 15px" class="text-primary">修改信息</el-link>
+								<el-link style="float: right; padding: 3px; font-size: 15px" class="text-primary" @click="changeInfo()">修改信息</el-link>
 							</div>
 							<br>
 							<div>
@@ -290,6 +290,9 @@ export default {
 					.then(res => {
 						this.plannedFlight = res.data
 					})
+		},
+		changeInfo(){
+			this.$router.push("/changeInfo")
 		}
 	},
 	async created() {
@@ -299,3 +302,5 @@ export default {
 	}
 }
 </script>
+<style scoped>
+</style>

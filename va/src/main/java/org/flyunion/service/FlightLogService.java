@@ -21,4 +21,13 @@ public interface FlightLogService {
 
 	List<FlightLog> getLogByPlane(String plane);
 
+	int getLogNumber(String iata);
+
+	List<FlightLog> getVerifyLog(String iata);
+
+	int acceptLog(String id);
+
+	int rejectLog(String id);
+
+	int deleteLog(String id);
 }

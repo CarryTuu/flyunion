@@ -105,6 +105,10 @@ export default {
 					prop: "model",
 				},
 				{
+					label: "位置",
+					prop: "position"
+				},
+				{
 					label: "飞行时长",
 					prop: "time"
 				},

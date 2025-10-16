@@ -19,8 +19,8 @@
 					</li>
 				</ul>
 				<Clock />
-				<span class="text-secondary" v-if="!loginUser === null" style="margin-right: 20px">欢迎您 {{ loginUser.userName }}！</span>
-				<el-button plain type="primary" style="margin-right: 20px">退出登录</el-button>
+				<span class="text-secondary" style="margin-right: 20px">欢迎您&nbsp; {{ loginUser.userName }}！</span>
+				<el-button plain type="primary" @click="routerToADM" v-if="showADMButton">前往后台管理</el-button>
 			</div>
 		</div>
 	</nav>
@@ -39,13 +39,20 @@ export default {
 	},
 	data(){
 		return {
-			loginUser: {}
+			loginUser: {},
+			showADMButton: false
 		}
 	},
 	methods: {
 		async getLoginUser() {
 			const loginUser = await va.get("/user/loadLoginUser")
 			this.loginUser = loginUser.data
+			if(this.loginUser.permission >= 2){
+				this.showADMButton = true
+			}
+		},
+		routerToADM(){
+			this.$router.push("/ADM/")
 		}
 	},
 	async created() {

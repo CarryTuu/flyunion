@@ -1,5 +1,6 @@
 package org.flyunion.controller;
 
+import org.flyunion.annotation.BackendAuthorization;
 import org.flyunion.entity.FlightPlan;
 import org.flyunion.entity.request.PlanSearchRequest;
 import org.flyunion.service.FlightPlanService;
@@ -36,7 +37,7 @@ public class FlightPlanController {
 		return ResponseEntity.ok(new Result<>(200, "找到如下可用航班信息", allPlan));
 	}
 
-	@PostMapping("/airport")
+	@GetMapping("/airport")
 	public ResponseEntity<Result<List<FlightPlan>>> getPlanByQuery(@RequestBody PlanSearchRequest searchForm) {
 		List<FlightPlan> planByQuery = flightPlanService.getPlanByQuery(searchForm.getDeparture(), searchForm.getArrival());
 		if (planByQuery.isEmpty()) {
@@ -47,6 +48,7 @@ public class FlightPlanController {
 	}
 
 	@PostMapping("/")
+	@BackendAuthorization(permission = 2)
 	public ResponseEntity<Result<?>> newPlan(@RequestBody FlightPlan flightPlan) {
 		int i = flightPlanService.newFlightPlan(flightPlan);
 		if (i > 0) {
@@ -57,7 +59,8 @@ public class FlightPlanController {
 	}
 
 	@PutMapping("/")
-	public ResponseEntity<Result<?>> updatePlan(FlightPlan flightPlan) {
+	@BackendAuthorization(permission = 2)
+	public ResponseEntity<Result<?>> updatePlan(@RequestBody FlightPlan flightPlan) {
 		int i = flightPlanService.updatePlan(flightPlan);
 		if (i > 0) {
 			return ResponseEntity.ok(new Result<>(200, "修改完毕", null));
@@ -66,9 +69,39 @@ public class FlightPlanController {
 				.body(new Result<>(500, "系统出错，请联系管理员", null));
 	}
 
-	@GetMapping("/query/{company}")
+	@GetMapping("/queryByCompany/{company}")
 	public ResponseEntity<Result<List<FlightPlan>>> getPlanByCompany(@PathVariable String company){
-		return ResponseEntity.ok(new Result<>(
-				200, "找到如下数据", flightPlanService.getPlanByCompany(company)));
+		List<FlightPlan> planByCompany = flightPlanService.getPlanByCompany(company);
+		if(planByCompany.isEmpty()){
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Result<>(404, "未找到符合条件的数据", null));
+		}else {
+			return ResponseEntity.ok(new Result<>(200, "找到如下数据", planByCompany));
+		}
+	}
+
+	@GetMapping("/planCount/{company}")
+	public ResponseEntity<Result<?>> getPlanCountByCompany(@PathVariable String company){
+		List<FlightPlan> planByCompany = flightPlanService.getPlanByCompany(company);
+		if(planByCompany.isEmpty()){
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Result<>(404, "未找到符合条件的数据", null));
+		}else {
+			return ResponseEntity.ok(new Result<>(200, "找到如下数据", planByCompany.size()));
+		}
+	}
+
+	@DeleteMapping("/{id}")
+	@BackendAuthorization(permission = 2)
+	public ResponseEntity<Result<?>> deletePlan(@PathVariable String id){
+		flightPlanService.deletePlan(id);
+		return ResponseEntity.ok(new Result<>(200, "删除完毕", null));
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<Result<FlightPlan>> getPlanById(@PathVariable String id){
+		FlightPlan planById = flightPlanService.getPlanById(id);
+		if(planById != null){
+			return ResponseEntity.ok(new Result<>(200, "找到如下数据", planById));
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Result<>(404, "未找到符合条件的数据", null));
 	}
 }

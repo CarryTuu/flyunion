@@ -24,7 +24,7 @@ public interface ConstantsMapper {
 	@Select("select * from flyunion.constants where `key` = #{key}")
 	Constants getConstantsByKey(String key);
 
-	@Update("update flyunion.constants set `value` = #{value} , `description` = #{description} where `key` = #{key}")
+	@Update("update flyunion.constants set `value` = #{value} where `key` = #{key}")
 	int updateConstants(Constants constants);
 
 	@Select("select * from flyunion.constants")

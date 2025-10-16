@@ -21,5 +21,7 @@ public class Company {
 	private String balance;
 	private int planeCount;
 	private String base;
+	private String icao;
+	private String iata;
 
 }

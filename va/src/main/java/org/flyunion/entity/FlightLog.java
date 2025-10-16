@@ -22,10 +22,14 @@ public class FlightLog {
 	private String id;
 	private String code;
 	private String plane;
-	private int pilot;
+	private String pilot;
+	private String departure;
+	private String arrival;
+	private String route;
 	private LocalDateTime date;
 	private String formattedTime;
 	private int rate;
 	private double oil;
+	private String status;
 
 }

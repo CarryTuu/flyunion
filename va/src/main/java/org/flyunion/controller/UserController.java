@@ -1,13 +1,14 @@
 package org.flyunion.controller;
 
+import org.flyunion.annotation.BackendAuthorization;
 import org.flyunion.annotation.SkipAuthentication;
 import org.flyunion.entity.User;
+import org.flyunion.entity.request.ChangeInfoRequest;
 import org.flyunion.entity.request.PasswordResetRequest;
 import org.flyunion.exception.*;
 import org.flyunion.service.UserService;
 import org.flyunion.utils.JwtUtil;
 import org.flyunion.utils.Result;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -76,7 +77,8 @@ public class UserController {
 		}
 	}
 
-	@PutMapping("/ADM/banUser/{cid}")
+	@PutMapping("/banUser/{cid}")
+	@BackendAuthorization(permission = 4)
 	public ResponseEntity<Result<String>> banUser(@PathVariable String cid) throws UserNotFoundException {
 		if (userService.banUser(cid) > 0) {
 			return ResponseEntity.ok(new Result<>(200, "封禁完毕", cid));
@@ -86,7 +88,7 @@ public class UserController {
 
 	@GetMapping("/topTen")
 	public ResponseEntity<Result<List<User>>> getTopTenUserByLogs(){
-		return ResponseEntity.ok(new Result<>(200, null, userService.getTopTenUserByLogs()));
+		return ResponseEntity.ok(new Result<>(200, "找到如下信息！", userService.getTopTenUserByLogs()));
 	}
 
 	@GetMapping("/getUserByCompany/{company}")
@@ -98,6 +100,23 @@ public class UserController {
 	public ResponseEntity<Result<?>> logOut(@RequestHeader("Authorization") String token) throws TokenExpiredException {
 		userService.logOut(token);
 		return ResponseEntity.ok(new Result<>(200, "退出登陆成功", null));
+	}
+
+	@PutMapping("/changeInfo")
+	public ResponseEntity<Result<?>> changeInfo(@RequestBody ChangeInfoRequest changeInfoRequest){
+		int i = userService.changeInfo(changeInfoRequest);
+		return i > 0 ? ResponseEntity.ok(new Result<>(200, "更改完毕", null)) :
+				ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Result<>(500, "发生未知错误", null));
+	}
+
+	@GetMapping("/getUserCountByCompany/{company}")
+	public ResponseEntity<Result<?>> getUserCountByCompany(@PathVariable String company){
+		return ResponseEntity.ok(new Result<>(200, "找到如下数据", userService.getUserByCompany(company).size()));
+	}
+
+	@GetMapping("/getAllUser")
+	public ResponseEntity<Result<List<User>>> getAllUser(){
+		return ResponseEntity.ok(new Result<>(200, "找到如下数据", userService.getAllUser()));
 	}
 }
 

@@ -1,6 +1,6 @@
 package org.flyunion.controller;
 
-import org.apache.ibatis.annotations.Select;
+import org.flyunion.annotation.BackendAuthorization;
 import org.flyunion.entity.FlightLog;
 import org.flyunion.service.FlightLogService;
 import org.flyunion.utils.Result;
@@ -54,7 +54,7 @@ public class FlightLogController {
 					.body(new Result<>(404, "未找到任何航班报告信息！", null));
 		}
 		return ResponseEntity.ok(new Result<>(200, "找到如下航班报告信息", log));
-	}
+	}	
 
 	@PostMapping("/fly")
 	public ResponseEntity<Result<?>> fly(@RequestBody FlightLog flightLog) {
@@ -74,5 +74,35 @@ public class FlightLogController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Result<>(404, "未找到相关数据", null));
 		}
 		return ResponseEntity.ok(new Result<>(200, "找到如下符合条件的数据", logByPlane));
+	}
+
+	@GetMapping("/number/{iata}")
+	@BackendAuthorization(permission = 2)
+	public ResponseEntity<Result<?>> getLogNumber(@PathVariable String iata){
+		return ResponseEntity.ok(new Result<>(200, "找到如下的数据", flightLogService.getLogNumber(iata)));
+	}
+
+	@GetMapping("/getVerifyLog/{iata}")
+	@BackendAuthorization(permission = 2)
+	public ResponseEntity<Result<List<FlightLog>>> getVerifyLog(@PathVariable String iata){
+		return ResponseEntity.ok(new Result<>(200, "找到如下数据", flightLogService.getVerifyLog(iata)));
+	}
+
+	@PutMapping("/accept/{id}")
+	@BackendAuthorization(permission = 2)
+	public ResponseEntity<Result<?>> acceptLog(@PathVariable String id){
+		return ResponseEntity.ok(new Result<>(200, "报告已经通过！", flightLogService.acceptLog(id)));
+	}
+
+	@PutMapping("/reject/{id}")
+	@BackendAuthorization(permission = 2)
+	public ResponseEntity<Result<?>> rejectLog(@PathVariable String id){
+		return ResponseEntity.ok(new Result<>(200, "报告已经拒绝！", flightLogService.rejectLog(id)));
+	}
+
+	@DeleteMapping("/delete/{id}")
+	@BackendAuthorization(permission = 2)
+	public ResponseEntity<Result<?>> deleteLog(@PathVariable String id){
+		return ResponseEntity.ok(new Result<>(200, "报告已经删除！", flightLogService.deleteLog(id)));
 	}
 }

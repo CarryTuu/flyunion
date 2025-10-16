@@ -1,5 +1,6 @@
 package org.flyunion.controller;
 
+import org.flyunion.annotation.SkipAuthentication;
 import org.flyunion.entity.PlannedFlight;
 import org.flyunion.service.PlannedFlightService;
 import org.flyunion.utils.Result;
@@ -19,24 +20,28 @@ public class PlannedFlightController {
 		this.plannedFlightService = plannedFlightService;
 	}
 
+	@SkipAuthentication
 	@PostMapping("/")
 	public ResponseEntity<Result<?>> newPlan(@RequestBody PlannedFlight plannedFlight){
-		return ResponseEntity.ok(new Result<>(200, "添加完毕",
-				plannedFlightService.newPlan(plannedFlight)));
+		plannedFlightService.newPlan(plannedFlight);
+		return ResponseEntity.ok(new Result<>(200, "添加完毕", null));
 	}
 
-	@PutMapping("/{status}/{id}")
-	public ResponseEntity<Result<?>> changeStatus(@PathVariable String status, @PathVariable String id){
-		return ResponseEntity.ok(new Result<>(200, "更改完毕",
-				plannedFlightService.changeStatus(status, id)));
+	@SkipAuthentication
+	@PutMapping("/{status}/{id}/{cid}")
+	public ResponseEntity<Result<?>> changeStatus(@PathVariable String status, @PathVariable String id, @PathVariable String cid){
+		plannedFlightService.changeStatus(status, id, cid);
+		return ResponseEntity.ok(new Result<>(200, "更改完毕", null));
 	}
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Result<?>> deletePlan(@PathVariable String id){
-		return ResponseEntity.ok(new Result<>(200, "状态已更改为已完成",
-				plannedFlightService.deletePlan(id)));
+	@SkipAuthentication
+	@DeleteMapping("/{id}/{cid}")
+	public ResponseEntity<Result<?>> deletePlan(@PathVariable String id, @PathVariable String cid){
+		plannedFlightService.deletePlan(id, cid);
+		return ResponseEntity.ok(new Result<>(200, "状态已更改为已完成", null));
 	}
 
+	@SkipAuthentication
 	@GetMapping("/{cid}")
 	public ResponseEntity<Result<List<PlannedFlight>>> getPlannedFlightByUser(@PathVariable String cid){
 		List<PlannedFlight> plannedFlightByUser = plannedFlightService.getPlannedFlightByUser(cid);

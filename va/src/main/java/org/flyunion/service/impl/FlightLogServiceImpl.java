@@ -59,4 +59,34 @@ public class FlightLogServiceImpl implements FlightLogService {
 		List<FlightLog> logByPlane = flightLogMapper.getLogByPlane(plane);
 		return formatTime(logByPlane);
 	}
+
+	@Override
+	public int getLogNumber(String iata) {
+		return flightLogMapper.getLogNumber(iata);
+	}
+
+	@Override
+	public List<FlightLog> getVerifyLog(String iata) {
+		List<FlightLog> verifyLog = flightLogMapper.getVerifyLog(iata);
+		for(FlightLog flightLog : verifyLog){
+			flightLog.setFormattedTime(DateFormatter.formatTime(flightLog.getDate()));
+		}
+
+		return verifyLog;
+	}
+
+	@Override
+	public int acceptLog(String id) {
+		return flightLogMapper.acceptLog(id);
+	}
+
+	@Override
+	public int rejectLog(String id) {
+		return flightLogMapper.rejectLog(id);
+	}
+
+	@Override
+	public int deleteLog(String id) {
+		return flightLogMapper.deleteLog(id);
+	}
 }

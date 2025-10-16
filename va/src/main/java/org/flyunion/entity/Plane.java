@@ -18,10 +18,11 @@ import org.springframework.stereotype.Component;
 public class Plane {
 
 	private String code;
-	private Integer owner;
+	private String owner;
 	private String fleet;
 	private String model;
 	private String status;
+	private String position;
 	private Integer time;
 	private double durability;
 	private String company;

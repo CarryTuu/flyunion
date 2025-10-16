@@ -1,5 +1,6 @@
 package org.flyunion.controller;
 
+import org.flyunion.annotation.BackendAuthorization;
 import org.flyunion.entity.Fleet;
 import org.flyunion.service.FleetService;
 import org.flyunion.utils.Result;
@@ -26,6 +27,7 @@ public class FleetController {
 	}
 
 	@PostMapping("/")
+	@BackendAuthorization(permission = 4)
 	public ResponseEntity<Result<?>> newFleet(@RequestBody Fleet fleet) {
 		int i = fleetService.newFleet(fleet);
 		return i > 0 ? ResponseEntity.ok(new Result<>(200, "机队创建完毕！", null)) :
@@ -54,6 +56,7 @@ public class FleetController {
 	}
 
 	@PutMapping("/")
+	@BackendAuthorization(permission = 4)
 	public ResponseEntity<Result<String>> modifyFleet(@RequestBody Fleet fleet) {
 		int i = fleetService.modifyFleet(fleet);
 		if (i > 0) {
@@ -64,6 +67,7 @@ public class FleetController {
 	}
 
 	@PutMapping("/{name}")
+	@BackendAuthorization(permission = 4)
 	public ResponseEntity<Result<?>> addPlane(@PathVariable String name) {
 		int i = fleetService.addPlane(name);
 		if (i > 0) {

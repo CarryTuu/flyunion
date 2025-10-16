@@ -39,7 +39,7 @@ export default {
 		return {
 			currentLine: null,
 			map: {},
-			 routeRequest: {
+			routeRequest: {
 				dep: "",
 				route: "",
 				arr: ""

@@ -1,6 +1,6 @@
 package org.flyunion.config;
 
-import org.flyunion.interceptor.AuthenticationInterceptor;
+import org.flyunion.interceptor.*;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -15,14 +15,20 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
 	private final AuthenticationInterceptor authenticationInterceptor;
+	private final BackendInterceptor backendInterceptor;
 
-	public WebConfig(AuthenticationInterceptor authenticationInterceptor) {
+	public WebConfig(AuthenticationInterceptor authenticationInterceptor, BackendInterceptor backendInterceptor) {
 		this.authenticationInterceptor = authenticationInterceptor;
+		this.backendInterceptor = backendInterceptor;
 	}
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(authenticationInterceptor)
-				.addPathPatterns("/**"); // 拦截所有请求
+				.addPathPatterns("/**")
+				.order(0);
+		registry.addInterceptor(backendInterceptor)
+				.addPathPatterns("/**")
+				.order(1);
 	}
 }

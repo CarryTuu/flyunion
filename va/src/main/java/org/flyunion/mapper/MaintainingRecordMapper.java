@@ -18,6 +18,6 @@ public interface MaintainingRecordMapper {
 	@Select("select * from flyunion.maintaining_record where code = #{plane}")
 	List<MaintainingRecord> getRecordByPlane(String plane);
 
-	@Insert("insert into flyunion.maintaining_record value (#{id}, #{code}, #{type}, #{date})")
+	@Insert("insert into flyunion.maintaining_record value (#{id}, #{code}, #{type}, CURDATE())")
 	int newRecord(MaintainingRecord maintainingRecord);
 }

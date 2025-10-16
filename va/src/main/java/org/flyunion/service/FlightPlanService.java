@@ -27,4 +27,9 @@ public interface FlightPlanService {
 	List<FlightPlan> getPlanByQuery(String departure, String arrival);
 
 	List<FlightPlan> getPlanByCompany(String company);
+
+	int deletePlan(String id);
+
+	FlightPlan getPlanById(String id);
+
 }

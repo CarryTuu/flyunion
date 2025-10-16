@@ -27,8 +27,8 @@ public interface CompanyMapper {
 	@Select("select * from flyunion.company where id = #{id}")
 	Company getCompanyByID(String id);
 
-	@Insert("insert into flyunion.company (id, name, pilot_count, plane_count, balance, base)" +
-			"value (#{id}, #{name}, 0, 0, '0', #{base})")
+	@Insert("insert into flyunion.company (id, name, pilot_count, plane_count, balance, base, icao, iata)" +
+			"value (#{id}, #{name}, 0, 0, '0', #{base}, #{icao}, #{iata})")
 	int newCompany(Company company);
 
 	@Update("update flyunion.company set pilot_count = pilot_count + 1 where name = #{name}")

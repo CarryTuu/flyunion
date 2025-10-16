@@ -12,7 +12,7 @@ public class RegistrationNumberGenerator {
 	private static final int RANDOM_STRING_LENGTH = 4;
 	private static final String PREFIX = "B-";
 
-	public static String generateRandomString() {
+	public static String generateRegistrationNumber() {
 		StringBuilder sb = new StringBuilder(PREFIX);
 		Random random = new Random();
 

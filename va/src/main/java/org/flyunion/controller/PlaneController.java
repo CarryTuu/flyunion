@@ -1,6 +1,6 @@
 package org.flyunion.controller;
 
-import org.flyunion.annotation.SkipAuthentication;
+import org.flyunion.annotation.BackendAuthorization;
 import org.flyunion.entity.Plane;
 import org.flyunion.exception.PlaneExistException;
 import org.flyunion.service.PlaneService;
@@ -35,7 +35,7 @@ public class PlaneController {
 	}
 
 	@GetMapping("/{cid}")
-	public ResponseEntity<Result<?>> getPlanesByCid(@PathVariable Integer cid) {
+	public ResponseEntity<Result<?>> getPlanesByCid(@PathVariable String cid) {
 		List<Plane> planesByUser = planeService.getPlanesByUser(cid);
 		if (planesByUser.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Result<>(404, "未找到符合条件的航空器", null));
@@ -43,8 +43,8 @@ public class PlaneController {
 		return ResponseEntity.ok(new Result<>(200, "找到如下所属人为" + cid + "的航空器", planesByUser));
 	}
 
-	@SkipAuthentication
 	@PostMapping("/newPlane")
+	@BackendAuthorization(permission = 4)
 	public ResponseEntity<Result<?>> newPlane(@RequestBody Plane plane) throws PlaneExistException {
 		int i = planeService.newPlane(plane);
 		if (i > 0) {
@@ -79,5 +79,37 @@ public class PlaneController {
 		return ResponseEntity.ok(new Result<>(200, "找到如下飞机",
 				planeService.getPlaneByCompany(company)));
 
+	}
+
+	@GetMapping("/getPlaneCountByCompany/{company}")
+	public ResponseEntity<Result<?>> getPlaneCountByCompany(@PathVariable String company){
+		return ResponseEntity.ok(new Result<>(200, "找到以下数据", planeService.getPlaneCountByCompany(company)));
+	}
+
+	@GetMapping("/getAllPlane")
+	public ResponseEntity<Result<List<Plane>>> getAllPlane(){
+		return ResponseEntity.ok(new Result<>(200, "找到如下数据", planeService.getAllPlane()));
+	}
+
+	@PutMapping("/restorePlane/{code}")
+	@BackendAuthorization(permission = 4)
+	public ResponseEntity<Result<?>> restorePlaneStatus(@PathVariable String code){
+		int i = planeService.restorePlaneStatus(code);
+		if (i > 0) {
+			return ResponseEntity.ok(new Result<>(200, "调整完毕", null));
+		}
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Result<>(500,
+				"服务器出现致命错误导致此操作未完成，请联系管理员", null));
+	}
+
+	@PutMapping("/publicPlane/{code}")
+	@BackendAuthorization(permission = 4)
+	public ResponseEntity<Result<?>> publicPlane(@PathVariable String code){
+		int i = planeService.publicPlane(code);
+		if (i > 0) {
+			return ResponseEntity.ok(new Result<>(200, "调整完毕", null));
+		}
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Result<>(500,
+				"服务器出现致命错误导致此操作未完成，请联系管理员", null));
 	}
 }

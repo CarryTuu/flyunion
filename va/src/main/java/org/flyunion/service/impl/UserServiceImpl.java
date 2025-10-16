@@ -3,6 +3,7 @@ package org.flyunion.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.flyunion.entity.Company;
 import org.flyunion.entity.User;
+import org.flyunion.entity.request.ChangeInfoRequest;
 import org.flyunion.entity.request.PasswordResetRequest;
 import org.flyunion.exception.*;
 import org.flyunion.mapper.CompanyMapper;
@@ -77,12 +78,15 @@ public class UserServiceImpl implements UserService {
 				log.info("注册成功！");
 				String token = JwtUtil.generateTokenByCID(user.getCid());
 				redisUtil.storeToken(user.getCid(), token);
+				return token;
+			}else{
+				log.error("注册出现错误，请查阅下方具体报错信息！");
+				return "注册错误！";
 			}
-			log.error("注册出现错误，请查阅下方具体报错信息！");
-			return "注册错误！";
+		}else {
+			log.error("当前CID：{}已存在于系统中！", user.getCid());
+			throw new UserExistException("用户" + user.getCid() + "已经存在，若忘记密码，请进入帮助中心！", HttpStatus.CONFLICT);
 		}
-		log.error("当前CID：{}已存在于系统中！", user.getCid());
-		throw new UserExistException("用户" + user.getCid() + "已经存在，若忘记密码，请进入帮助中心！", HttpStatus.CONFLICT);
 	}
 
 	@Override
@@ -146,5 +150,15 @@ public class UserServiceImpl implements UserService {
 	public void logOut(String token) throws TokenExpiredException {
 		redisUtil.deleteToken(JwtUtil.getCidFromToken(token));
 		JwtUtil.addBlackList(token);
+	}
+
+	@Override
+	public List<User> getAllUser() {
+		return userMapper.getAllUser();
+	}
+
+	@Override
+	public int changeInfo(ChangeInfoRequest changeInfoRequest) {
+		return userMapper.changeInfo(changeInfoRequest);
 	}
 }

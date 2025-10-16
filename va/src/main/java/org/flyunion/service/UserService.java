@@ -1,6 +1,7 @@
 package org.flyunion.service;
 
 import org.flyunion.entity.User;
+import org.flyunion.entity.request.ChangeInfoRequest;
 import org.flyunion.entity.request.PasswordResetRequest;
 import org.flyunion.exception.*;
 
@@ -18,6 +19,8 @@ public interface UserService {
 
 	String register(User user) throws UserExistException;
 
+	List<User> getAllUser();
+
 	String loginByEmail(User user) throws IncorrectPasswordException, UserNotFoundException, UserBannedException;
 
 	User loadUserByCid(String cid);
@@ -31,4 +34,6 @@ public interface UserService {
 	List<User> getUserByCompany(String company);
 
 	void logOut(String cid) throws TokenExpiredException;
+
+	int changeInfo(ChangeInfoRequest changeInfoRequest);
 }

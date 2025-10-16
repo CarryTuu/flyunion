@@ -1,5 +1,6 @@
 package org.flyunion.controller;
 
+import org.flyunion.annotation.BackendAuthorization;
 import org.flyunion.entity.MaintainingRecord;
 import org.flyunion.service.MaintainingRecordService;
 import org.flyunion.utils.Result;
@@ -29,10 +30,11 @@ public class MaintainingRecordController {
 	}
 
 	@PostMapping("/")
+	@BackendAuthorization(permission = 3)
 	public ResponseEntity<Result<?>> newRecord(@RequestBody MaintainingRecord maintainingRecord){
 		int i = maintainingRecordService.newRecord(maintainingRecord);
 		if(i > 0){
-			return ResponseEntity.ok(new Result<>(200, "添加完成", null));
+				return ResponseEntity.ok(new Result<>(200, "添加完成", null));
 		}
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Result<>(500, "发生未知错误", null));
 	}

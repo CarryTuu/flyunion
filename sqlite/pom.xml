@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.flyunion</groupId>
 	<artifactId>sqlite</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.1-HOTFIX</version>
 	<name>sqlite</name>
 	<description>sqlite</description>
 	<url/>

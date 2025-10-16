@@ -82,7 +82,7 @@ export default {
 				confirm: "",
 				email: "",
 				qq: "",
-					company: ""
+				company: ""
 			},
 			rules: {
 				pwdModify: [

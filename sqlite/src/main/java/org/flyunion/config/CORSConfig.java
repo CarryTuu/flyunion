@@ -14,7 +14,7 @@ public class CORSConfig {
 	@Bean
 	public CorsFilter corsFilter() {
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(List.of("http://localhost:5174")); // 允许你的 Vue 前端
+		config.setAllowedOrigins(List.of("http://223.102.42.230:5174")); // 允许你的 Vue 前端
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setAllowedHeaders(List.of("Content-Type", "Authorization")); // 允许的请求头
 		config.setAllowCredentials(true); // 允许跨域携带 Cookie

@@ -1,8 +1,8 @@
 <template>
 	<div style="margin-right: 50px">
-		UTC 时间 {{ utcTime }}
+		UTC 时间：{{ utcTime }}
 		&nbsp;&nbsp;
-		北京时间 {{ beijingTime }}
+		北京时间：{{ beijingTime }}
 	</div>
 </template>
 

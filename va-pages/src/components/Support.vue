@@ -74,7 +74,7 @@ export default {
 							this.remainingTime = 0;
 						}
 					}, 1000);
-					service.post("/mail/sendCaptcha/" + this.form.email)
+					va.post("/mail/sendCaptcha/" + this.form.email)
 				}
 			}
 		},

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.flyunion.entity.FlightPlan;
 import org.flyunion.mapper.FlightPlanMapper;
 import org.flyunion.service.FlightPlanService;
+import org.flyunion.utils.UUIDGenerator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,6 +47,7 @@ public class FlightPlanServiceImpl implements FlightPlanService {
 
 	@Override
 	public int newFlightPlan(FlightPlan flightPlan) {
+		flightPlan.setPlanId(UUIDGenerator.getId());
 		return flightPlanMapper.newFlightPlan(flightPlan);
 	}
 
@@ -70,6 +72,17 @@ public class FlightPlanServiceImpl implements FlightPlanService {
 			return this.getFlightPlanByDestination(arrival);
 		}
 	}
+
+	@Override
+	public int deletePlan(String id) {
+		return flightPlanMapper.deletePlan(id);
+	}
+
+	@Override
+	public FlightPlan getPlanById(String id) {
+		return flightPlanMapper.getPlanById(id);
+	}
+
 
 	@Override
 	public List<FlightPlan> getPlanByCompany(String company) {

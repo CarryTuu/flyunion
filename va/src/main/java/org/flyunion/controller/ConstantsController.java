@@ -1,5 +1,6 @@
 package org.flyunion.controller;
 
+import org.flyunion.annotation.BackendAuthorization;
 import org.flyunion.entity.Constants;
 import org.flyunion.service.ConstantsService;
 import org.flyunion.utils.Result;
@@ -26,6 +27,7 @@ public class ConstantsController {
 	}
 
 	@PostMapping("/")
+	@BackendAuthorization(permission = 4)
 	public ResponseEntity<Result<?>> newConstants(@RequestBody Constants constants) {
 		int i = constantsService.newConstants(constants);
 		if (i > 0) {
@@ -36,6 +38,7 @@ public class ConstantsController {
 	}
 
 	@PutMapping("/")
+	@BackendAuthorization(permission = 4)
 	public ResponseEntity<Result<?>> updateConstants(@RequestBody Constants constants) {
 		int i = constantsService.updateConstants(constants);
 		if (i > 0) {
@@ -46,6 +49,7 @@ public class ConstantsController {
 	}
 
 	@GetMapping("/")
+	@BackendAuthorization(permission = 4)
 	public ResponseEntity<Result<List<Constants>>> getAllConstants() {
 		List<Constants> allConstants = constantsService.getAllConstants();
 		if (allConstants.isEmpty()) {
@@ -55,6 +59,7 @@ public class ConstantsController {
 	}
 
 	@GetMapping("/{name}")
+	@BackendAuthorization(permission = 4)
 	public ResponseEntity<Result<Constants>> getConstantsByKey(@PathVariable String name) {
 		Constants constantsByKey = constantsService.getConstantsByKey(name);
 		if (constantsByKey != null) {

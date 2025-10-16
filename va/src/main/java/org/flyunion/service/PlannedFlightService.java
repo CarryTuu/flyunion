@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface PlannedFlightService {
 
-	int newPlan(PlannedFlight plannedFlight);
+	void newPlan(PlannedFlight plannedFlight);
 
-	int changeStatus(String status, String id);
+	boolean changeStatus(String status, String id, String cid);
 
-	int deletePlan(String id);
+	boolean deletePlan(String id, String cid);
 
 	List<PlannedFlight> getPlannedFlightByUser(String cid);
 

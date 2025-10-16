@@ -46,4 +46,10 @@ public class GlobalExceptionHandler {
 		log.error("出现异常", e);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Result<>(500, e.getMessage(), null));
 	}
+
+	@ExceptionHandler(NullPointerException.class)
+	public ResponseEntity<Result<?>> handleNullPointerException(NullPointerException e){
+		log.error("出现异常", e);
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Result<>(500, e.getMessage(), null));
+	}
 }

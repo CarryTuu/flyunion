@@ -19,7 +19,7 @@ import java.util.*;
 public class JwtUtil {
 
 	private static final String SECRET_KEY = "flyunion100013";// 用于签名的密钥
-	private static final int EXPIRE_TIME = 24 * 60 * 60 * 1000;
+	private static final int EXPIRE_TIME = 15 * 60 * 1000;
 	private static final Logger log = LoggerFactory.getLogger(JwtUtil.class);
 	private static final Set<String> tokenBlacklist = Collections.synchronizedSet(new HashSet<>());
 
@@ -97,6 +97,7 @@ public class JwtUtil {
 			throw new TokenExpiredException("Token已经过期！请重新登录");
 		}
 	}
+
 	/**将token加入黑名单*/
 	public static void addBlackList(String token){
 		tokenBlacklist.add(token);

@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlannedFlight {
-
 	private String id;
 	private String flightCode;
 	private String departure;
@@ -21,5 +20,4 @@ public class PlannedFlight {
 	private LocalDateTime plannedTime;
 	private String formattedTime;
 	private String status;
-
 }

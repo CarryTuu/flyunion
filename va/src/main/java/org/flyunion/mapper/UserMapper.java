@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.flyunion.entity.User;
+import org.flyunion.entity.request.ChangeInfoRequest;
 import org.flyunion.entity.request.PasswordResetRequest;
 import org.springframework.stereotype.Repository;
 
@@ -22,6 +23,9 @@ public interface UserMapper {
 
 	@Select("select * from flyunion.user where cid = #{cid}")
 	User loginByUsername(String cid);
+
+	@Select("select * from flyunion.user")
+	List<User> getAllUser();
 
 	@Select("select * from flyunion.user where email = #{email}")
 	User loginByEmail(String email);
@@ -46,4 +50,7 @@ public interface UserMapper {
 
 	@Select("select * from flyunion.user where company = #{company}")
 	List<User> getUserByCompany(String company);
+
+	@Update("update flyunion.user set username = #{userName}, password = #{newPassword}, email = #{email} where cid = #{cid}")
+	int changeInfo(ChangeInfoRequest changeInfoRequest);
 }

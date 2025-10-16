@@ -5,13 +5,10 @@ import org.flyunion.exception.CaptchaExistException;
 import org.flyunion.exception.IncorrectCaptchaException;
 import org.flyunion.utils.CaptchaGenerator;
 import org.flyunion.utils.RedisUtil;
-import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-
-import java.util.Objects;
 
 /**
  * 邮件与验证码业务
@@ -56,12 +53,12 @@ public class CaptchaService {
 
 	public boolean verifyCaptcha(String email, String inputCaptcha) throws IncorrectCaptchaException, CaptchaExistException {
 		log.info("开始比对输入的验证码与存储的验证码是否一致");
-		String captcha = redisUtil.getCaptcha(email);
+		String captcha = (String) redisUtil.getCaptcha(email);
 		if(inputCaptcha.equals(captcha)){
 			redisUtil.deleteCaptcha(email);
 			return true;
 		}else{
-			throw new IncorrectCaptchaException("验证码输入错误！请重新输入！", HttpStatus.UNPROCESSABLE_ENTITY);
+			throw new IncorrectCaptchaException("验证码输入错误！请重新输入！", HttpStatus.BAD_REQUEST);
 		}
 	}
 }

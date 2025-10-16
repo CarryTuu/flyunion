@@ -15,7 +15,7 @@ import java.util.Map;
 public interface PlaneService {
 	Plane getPlaneByCode(String code);
 
-	List<Plane> getPlanesByUser(Integer cid);
+	List<Plane> getPlanesByUser(String cid);
 
 	int newPlane(Plane plane) throws PlaneExistException;
 
@@ -24,4 +24,12 @@ public interface PlaneService {
 	int planeDestroyed(String code);
 
 	Map<String, List<Plane>> getPlaneByCompany(String company);
+
+	List<Plane> getAllPlane();
+
+	int restorePlaneStatus(String code);
+
+	int publicPlane(String code);
+
+	int getPlaneCountByCompany(String company);
 }

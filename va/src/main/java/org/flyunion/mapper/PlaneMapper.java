@@ -19,13 +19,14 @@ import java.util.List;
 @Repository
 public interface PlaneMapper {
 
-	@Select("select * from plane where code = #{code}")
+	@Select("select * from flyunion.plane where code = #{code}")
 	Plane getPlaneByCode(String code);
 
 	@Select("select * from flyunion.plane where owner = #{cid}")
-	List<Plane> getPlanesByUser(Integer cid);
+	List<Plane> getPlanesByUser(String cid);
 
-	@Insert("insert into flyunion.plane value (#{code}, #{owner}, #{fleet}, #{model},'available', 0, 100.00, #{company})")
+	@Insert("insert into flyunion.plane value " +
+			"(#{code}, #{owner}, #{fleet}, #{model},'available', #{position}, 0, 100.00, #{company})")
 	int newPlane(Plane plane);
 
 	@Update("update flyunion.plane set time = time + #{time} where code = #{code}")
@@ -36,4 +37,13 @@ public interface PlaneMapper {
 
 	@Select("select * from flyunion.plane where company = #{company}")
 	List<Plane> getPlaneByCompany(String company);
+
+	@Select("select * from flyunion.plane")
+	List<Plane> getAllPlane();
+
+	@Update("update flyunion.plane set status = 'available' where code = #{code}")
+	int restorePlaneStatus(String code);
+
+	@Update("update flyunion.plane set owner = '公用' where code = #{code}")
+	int publicPlane(String code);
 }

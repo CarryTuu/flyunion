@@ -4,6 +4,7 @@ import org.flyunion.entity.MaintainingRecord;
 import org.flyunion.mapper.MaintainingRecordMapper;
 import org.flyunion.service.MaintainingRecordService;
 import org.flyunion.utils.DateFormatter;
+import org.flyunion.utils.UUIDGenerator;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -34,6 +35,7 @@ public class MaintainingRecordServiceImpl implements MaintainingRecordService {
 
 	@Override
 	public int newRecord(MaintainingRecord maintainingRecord) {
+		maintainingRecord.setId(UUIDGenerator.getId());
 		return maintainingRecordMapper.newRecord(maintainingRecord);
 	}
 

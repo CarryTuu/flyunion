@@ -3,6 +3,7 @@ package org.flyunion.utils;
 import lombok.extern.slf4j.Slf4j;
 import org.flyunion.exception.CaptchaExistException;
 import org.flyunion.exception.TokenExpiredException;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -14,21 +15,21 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RedisUtil {
 
-
-	private final RedisTemplate<String, String> redisTemplate;
+	@Qualifier("tokenAndCaptchaRedisTemplate")
+	private final RedisTemplate<String, Object> redisTemplate;
 	@Value("${redis.verify.tokenKey}")
 	private String tokenKey;
 	@Value("${redis.verify.captchaKey}")
 	private String captchaKey;
 
-	public RedisUtil(RedisTemplate<String, String> redisTemplate) {
+	public RedisUtil(@Qualifier("tokenAndCaptchaRedisTemplate") RedisTemplate<String, Object> redisTemplate) {
 		this.redisTemplate = redisTemplate;
 	}
 
 	//存储token，并且设置十五分钟后删除
 	public void storeToken(String cid, String token){
-		ValueOperations<String, String> ops = redisTemplate.opsForValue();
-		ops.set(tokenKey + cid, token, 24, TimeUnit.HOURS);
+		ValueOperations<String, Object> ops = redisTemplate.opsForValue();
+		ops.set(tokenKey + cid, token, 15, TimeUnit.MINUTES);
 	}
 
 	//检查token存在性
@@ -40,9 +41,9 @@ public class RedisUtil {
 	}
 
 	//获取Token
-	public String getToken(String cid) throws TokenExpiredException {
+	public Object getToken(String cid) throws TokenExpiredException {
 		isTokenExists(cid);
-		ValueOperations<String, String> ops = redisTemplate.opsForValue();
+		ValueOperations<String, Object> ops = redisTemplate.opsForValue();
 		return ops.get(tokenKey + cid);
 	}
 
@@ -54,18 +55,18 @@ public class RedisUtil {
 
 	//以下为Captcha验证码方法
 	public void storeCaptcha(String email, String code){
-		ValueOperations<String, String> ops = redisTemplate.opsForValue();
+		ValueOperations<String, Object> ops = redisTemplate.opsForValue();
 		ops.set(captchaKey + email, code, 5, TimeUnit.MINUTES);
 		log.info("验证码存储完毕，唯一标识符为邮箱");
 	}
 
 
-	public String getCaptcha(String email) throws CaptchaExistException {
+	public Object getCaptcha(String email) throws CaptchaExistException {
 		String key = captchaKey + email;
 		if (!Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
 			throw new CaptchaExistException("验证码不存在！");
 		}
-		ValueOperations<String, String> ops = redisTemplate.opsForValue();
+		ValueOperations<String, Object> ops = redisTemplate.opsForValue();
 		return ops.get(key);
 	}
 

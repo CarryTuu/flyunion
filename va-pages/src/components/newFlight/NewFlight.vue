@@ -106,7 +106,7 @@ export default {
 	},
 	methods: {
 		getAllFlight(){
-			va.get("/flightPlan/query/" + this.company)
+			va.get("/flightPlan/queryByCompany/" + this.company)
 					.then(res => {
 						this.flights = res.data
 						this.searchForm.departure = ""

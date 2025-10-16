@@ -2,7 +2,7 @@ import axios from "axios";
 
 const sqliteService = axios.create({
 
-    baseURL: "http://localhost:9998",
+    baseURL: "http://api.sqlite.fallenera.site:9998",
     withCredentials: true
 });
 //请求拦截器

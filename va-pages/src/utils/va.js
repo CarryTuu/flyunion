@@ -2,13 +2,7 @@ import axios from "axios";
 import showUnauthorizedAlert from "@/utils/Unauthorized.js";
 
 const service = axios.create({
-
-    baseURL: "http://api.va.fallenera.site:9999",
-    headers: {
-        'Access-Control-Allow-Origin': 'http://localhost:5174',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
-        'Access-Control-Allow-Headers': 'Content-Type'
-    }
+    baseURL: import.meta.env.VITE_API_BASE_URL
 });
 //请求拦截器
 service.interceptors.request.use(config => {

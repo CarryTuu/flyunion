@@ -1,9 +1,7 @@
 import axios from "axios";
 
 const sqliteService = axios.create({
-
-    baseURL: "http://api.sqlite.fallenera.site:9998",
-    withCredentials: true
+    baseURL: import.meta.env.VITE_API2_BASE_URL
 });
 //请求拦截器
 sqliteService.interceptors.request.use(config => {

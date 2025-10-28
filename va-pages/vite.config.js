@@ -13,17 +13,20 @@ export default defineConfig({
             '@': fileURLToPath(new URL('./src', import.meta.url))
         }
     },
+    define: {
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
+    },
     devServer: {
         proxy: {
             '/api': {
-                target: `http://api.va.fallenera.site:9999`, // 替换为你的后端URL
+                target: `http://211.154.19.204:9999`, // 替换为你的后端URL
                 changeOrigin: true, // 开启代理服务器
                 pathRewrite: {
                     '^/api': '' // 将所有以/api开头的请求路径重写为空字符串
                 }
             },
             '/api2': {
-                target: `http:/api.sqlite.fallenera.site:9998`, // 替换为你的后端URL
+                target: `http://211.154.19.204:9998`, // 替换为你的后端URL
                 changeOrigin: true, // 开启代理服务器
                 pathRewrite: {
                     '^/api2': '' // 将所有以/api开头的请求路径重写为空字符串

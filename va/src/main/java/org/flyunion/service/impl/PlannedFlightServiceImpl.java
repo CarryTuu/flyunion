@@ -13,6 +13,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
+/**
+ * 已计划航班业务实现类
+ * @author 1228
+ * @version 0.1-SNAPSHOT
+ * */
 @Service
 @Slf4j
 public class PlannedFlightServiceImpl implements PlannedFlightService {

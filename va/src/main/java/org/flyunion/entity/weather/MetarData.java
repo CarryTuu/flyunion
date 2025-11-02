@@ -10,6 +10,8 @@ import java.util.List;
 
 /**
  * METAR报文数据模型
+ * @author 1228
+ * @version 0.1-SNAPSHOT
  */
 
 @Data

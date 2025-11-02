@@ -12,6 +12,13 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+/**
+ * 气象报文服务
+ * 获取指定机场的气象报文
+ * 使用xflysim的api
+ * @author 1228
+ * @version 0.1-SNAPSHOT
+ * */
 @Service
 public class MetarService {
 

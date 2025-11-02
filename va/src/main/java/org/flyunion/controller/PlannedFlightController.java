@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * 已计划航班控制器
+ * @author 1228
+ * @version 0.1-SNAPSHOT
+ * */
 @RestController
 @RequestMapping("/plannedFlight")
 public class PlannedFlightController {

@@ -7,6 +7,11 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
+/**
+ * 已计划航班实体类
+ * @author 1228
+ * @version 0.1-SNAPSHOT
+ * */
 @Data
 @Component
 @NoArgsConstructor

@@ -1,24 +1,20 @@
 package org.flyunion.service.service;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.flyunion.entity.BlacklistRecord;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Redis IP黑名单服务
+ * @author 1228
+ * @version 0.1-SNAPSHOT
+ * */
 @Service
 public class RedisIPBlacklistService {
 

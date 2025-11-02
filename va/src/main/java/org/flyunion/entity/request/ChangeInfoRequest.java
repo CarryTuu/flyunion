@@ -5,6 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
+/**
+ * 用户个人信息修改请求实体类
+ * @author 1228
+ * @version 0.1-SNAPSHOT
+ * */
 @Data
 @Component
 @NoArgsConstructor

@@ -11,6 +11,8 @@ import java.time.Instant;
 
 /**
  * 黑名单记录实体
+ * @author 1228
+ * @version 0.1-SNAPSHOT
  */
 @Data
 @Component

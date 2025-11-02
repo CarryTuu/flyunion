@@ -10,7 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-
+/**
+ * METAR数据控制器
+ * @author 1228
+ * @version 0.1-SNAPSHOT
+ * */
 @RestController
 @RequestMapping("/metar")
 public class MetarController {

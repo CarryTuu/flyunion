@@ -9,7 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+/**
+ * 维护记录控制器
+ * @author 1228
+ * @version 0.1-SNAPSHOT
+ * */
 @RestController
 @RequestMapping("/maintainingRecord")
 public class MaintainingRecordController {

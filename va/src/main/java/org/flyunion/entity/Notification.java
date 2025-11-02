@@ -7,6 +7,11 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
+/**
+ * 通知实体类，暂未实装，敬请期待后续版本
+ * @author 1228
+ * @version 0.1-SNAPSHOT
+ * */
 @Data
 @Component
 @NoArgsConstructor

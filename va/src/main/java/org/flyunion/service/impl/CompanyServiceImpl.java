@@ -9,6 +9,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * 航空公司业务实现类
+ * @author 1228
+ * @version 0.1-SNAPSHOT
+ * */
 @Slf4j
 @Service
 public class CompanyServiceImpl implements CompanyService {

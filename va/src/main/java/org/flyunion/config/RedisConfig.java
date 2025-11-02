@@ -21,7 +21,11 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
-
+/**
+ * Redis配置类，用于对于不同的情况配置Redis连接工厂和RedisTemplate
+ * @author 1228
+ * @version 0.2.6-SNAPSHOT
+ * */
 @Configuration
 @EnableConfigurationProperties(RedisProperties.class)
 public class RedisConfig {

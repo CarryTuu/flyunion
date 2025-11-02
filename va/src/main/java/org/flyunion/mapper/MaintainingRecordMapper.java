@@ -8,6 +8,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * 维护记录数据库仓库
+ * @author 1228
+ * @version 0.1-SNAPSHOT
+ * */
 @Mapper
 @Repository
 public interface MaintainingRecordMapper {

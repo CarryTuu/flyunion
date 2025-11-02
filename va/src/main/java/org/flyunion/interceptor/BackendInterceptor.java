@@ -13,6 +13,21 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.lang.reflect.Method;
+
+/**
+ * 请求信息拦截器
+ * 拦截请求信息，并进行权限检查
+ * 如果请求方法有BackendAuthorization注解，则检查用户权限
+ * 如果用户权限不足，则返回403错误
+ * 如果用户权限满足，则放行请求
+ * 如果请求方法没有BackendAuthorization注解，则放行请求
+ * 如果请求方法有SkipAuthentication注解，则放行请求
+ * 如果请求方法没有SkipAuthentication注解，则检查用户Token
+ * 如果用户Token有效，则放行请求
+ * 如果用户Token无效，则返回401错误
+ * @author 1228
+ * @version 0.1-SNAPSHOT
+ * */
 @Slf4j
 @Component
 public class BackendInterceptor implements HandlerInterceptor {

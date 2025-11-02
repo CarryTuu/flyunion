@@ -6,6 +6,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * 可执行航班数据库仓库
+ * @author 1228
+ * @version 0.1-SNAPSHOT
+ * */
 @Mapper
 @Repository
 public interface FlightPlanMapper {

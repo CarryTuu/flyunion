@@ -88,6 +88,21 @@ export default {
 					planeList: "A350_900",
 					angle: 85
 				},
+				{
+					pilot: "100003",
+					code: "3U5264",
+					dep: "ZUUU",
+					arr: "ZHHH",
+					route: "UBRAB B213 VELPU W550 OTLOS V38 TOSIM B213 WTM",
+					positionInfo: {
+						speed: "308 kt",
+						altitude: "8900 ft",
+						lng: 104.266167,
+						lat: 30.933028,
+						planeList: "A350_900",
+						heading: 85
+					}
+				},
 			],
 		}
 	},

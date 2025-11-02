@@ -11,6 +11,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Redis工具类
+ * 用于存储验证码和Token
+ * @author 1228
+ * @version 0.1-SNAPSHOT
+ * */
 @Slf4j
 @Component
 public class RedisUtil {

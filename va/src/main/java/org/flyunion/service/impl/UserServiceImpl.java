@@ -12,7 +12,6 @@ import org.flyunion.service.UserService;
 import org.flyunion.utils.JwtUtil;
 import org.flyunion.utils.PasswordEncoder;
 import org.flyunion.utils.RedisUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;

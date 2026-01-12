@@ -4,7 +4,7 @@
 		<el-container>
 			<el-aside width="70px"><Menu/></el-aside>
 			<el-main>
-				<el-card class="box-card">
+				<el-card class="box-card-large">
 					<div class="clearfix">
 						<p class="text-center text-secondary">您可以在当前页面选择航班计划并且添加进您的计划执行表中，计划执行表将在您的主页可见</p>
 						<p class="text-center text-secondary">如需连飞进行航班任务可直接复制航路填写航班计划</p>

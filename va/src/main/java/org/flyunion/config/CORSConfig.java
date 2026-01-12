@@ -22,10 +22,10 @@ public class CORSConfig {
 	public CorsFilter corsFilter() {
 		//0.2.5-HOTFIX：测试用途，将允许请求的源改为个人电脑IP
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(List.of("http://223.102.42.230:5174")); // 允许来自这个源的请求
+		config.setAllowedOrigins(List.of("*")); // 允许来自这个源的请求
 		config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 允许的方法
 		config.setAllowedHeaders(List.of("*")); // 允许的头部
-		config.setAllowCredentials(true); // 允许携带cookies
+//		config.setAllowCredentials(true); // 允许携带cookies
 
 		// 对于所有路径应用CORS配置
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

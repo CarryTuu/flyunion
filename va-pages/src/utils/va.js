@@ -2,7 +2,7 @@ import axios from "axios";
 import showUnauthorizedAlert from "@/utils/Unauthorized.js";
 
 const service = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL
+    baseURL: import.meta.env.VITE_BASE_API_VA,
 });
 //请求拦截器
 service.interceptors.request.use(config => {

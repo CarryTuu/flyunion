@@ -12,10 +12,16 @@ import org.flyunion.service.UserService;
 import org.flyunion.utils.JwtUtil;
 import org.flyunion.utils.PasswordEncoder;
 import org.flyunion.utils.RedisUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户业务
@@ -30,6 +36,9 @@ public class UserServiceImpl implements UserService {
 	private final UserMapper userMapper;
 	private final CompanyMapper companyMapper;
 	private final RedisUtil redisUtil;
+
+    @Qualifier("onlineUserRedisTemplate")
+    private RedisTemplate<String, Object> redisTemplate;
 
 	public UserServiceImpl(UserMapper userMapper, CompanyMapper companyMapper, RedisUtil redisUtil) {
 		this.userMapper = userMapper;
@@ -92,7 +101,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public String loginByEmail(User user) throws IncorrectPasswordException, UserNotFoundException, UserBannedException {
 		log.info("====================登录功能开始====================");
-		log.info("开始在系统中查询cid为{}的用户信息", user.getEmail());
+		log.info("开始在系统中查询email为{}的用户信息", user.getEmail());
 		User userFromDB = userMapper.loginByEmail(user.getEmail());
 		if (userFromDB != null) {
 			log.info("email为{}的用户存在，比较密码信息", user.getEmail());
@@ -161,4 +170,49 @@ public class UserServiceImpl implements UserService {
 	public int changeInfo(ChangeInfoRequest changeInfoRequest) {
 		return userMapper.changeInfo(changeInfoRequest);
 	}
+
+    @Override
+    public String loginViaSimulator(User user) throws UserNotFoundException, UserBannedException, IncorrectPasswordException {
+        log.info("====================模拟器登录功能开始====================");
+        log.info("开始在系统中查询cid为{}的用户信息", user.getCid());
+        User userFromDB = userMapper.loginByUsername(user.getCid());
+        if (userFromDB != null) {
+            log.info("cid为{}的用户存在，比较密码信息", user.getCid());
+            if (PasswordEncoder.compare(user.getPassword(), userFromDB.getPassword())) {
+                if ("banned".equals(userFromDB.getStatus())) {
+                    throw new UserBannedException("用户" + userFromDB.getCid() +"已经被封禁，如为误封请联系管理员！", HttpStatus.FORBIDDEN);
+                }
+                log.info("密码信息校对正确，登录用户身份已验证：{}，开始生成token", user.getCid());
+                String token = JwtUtil.generateTokenViaSimulator(userFromDB.getCid());
+                redisUtil.storeToken(userFromDB.getEmail(), token);
+                return token;
+            }
+            log.error("密码信息校对失败，登录用户身份验证失败！");
+            throw new IncorrectPasswordException("密码输入不正确！", HttpStatus.BAD_REQUEST);
+        }
+        log.error("cid验证失败，用户不存在！登录用户身份验证失败");
+        throw new UserNotFoundException("用户" + user.getEmail() + "不存在！", HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    public void newOnlineUser(String cid) {
+        User user = this.loadUserByCid(cid);
+        ValueOperations<String, Object> ops = redisTemplate.opsForValue();
+        ops.set("onlineUser" + cid, user);
+    }
+
+    @Override
+    public void simulatorOffLine(String cid) {
+        redisTemplate.delete("onlineUser" + cid);
+    }
+
+    @Override
+    public List<User> getOnlineUser() {
+        List<Object> users = redisTemplate.opsForValue().multiGet(redisTemplate.keys("onlineUser*"));
+
+        if (users != null) {
+            return users.stream().map(user -> (User) user).collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
 }

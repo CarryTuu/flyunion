@@ -8,13 +8,11 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 /**
- * @Deprecated  当前方法本版本暂时不做实装，需要在后续的版本中实现，编写版本号：0.2.6-HOTFIX
  * WebSocket 配置
  * @author 1228
  * @version 0.2.6-HOTFIX
  * */
 @Slf4j
-@Deprecated(since = "0.2.6-HOTFIX")
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {

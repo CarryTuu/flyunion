@@ -21,25 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 class VaApplicationTests {
 
-	@Autowired
-	CaptchaService captchaService;
-
-	@Autowired
-	FlightLogMapper mapper;
-
-	@Autowired
-	MetarService metarService;
-
 	@Test
 	void contextLoad() throws IOException, InterruptedException {
 
-		System.out.println("UUIDGenerator.getId() = " + UUIDGenerator.getId());
 
 	}
-
-	@Test
-	void uuID() throws IOException, InterruptedException {
-		System.out.println("JwtUtil.generateTokenByCID(\"100013\") = " + JwtUtil.generateTokenByCID("100013"));
-	}
-
 }

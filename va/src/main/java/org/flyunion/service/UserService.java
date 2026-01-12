@@ -36,4 +36,12 @@ public interface UserService {
 	void logOut(String cid) throws TokenExpiredException;
 
 	int changeInfo(ChangeInfoRequest changeInfoRequest);
+
+    String loginViaSimulator(User user) throws UserNotFoundException, UserBannedException, IncorrectPasswordException;
+
+    void newOnlineUser(String cid);
+
+    void simulatorOffLine(String cid);
+
+    List<User> getOnlineUser();
 }

@@ -118,5 +118,28 @@ public class UserController {
 	public ResponseEntity<Result<List<User>>> getAllUser(){
 		return ResponseEntity.ok(new Result<>(200, "找到如下数据", userService.getAllUser()));
 	}
+
+	@SkipAuthentication
+	@GetMapping("/loadUser/{cid}")
+	public ResponseEntity<Result<User>> getUserByCid(@PathVariable String cid) {
+		User user = userService.loadUserByCid(cid);
+		return user == null ? ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(new Result<>(404, "用户不存在", null)) :
+				ResponseEntity.ok(new Result<>(200, "找到如下数据", user));
+	}
+
+    @SkipAuthentication
+    @PostMapping("/login/simulator")
+    public ResponseEntity<Result<String>> loginViaSimulator(@RequestBody User user) throws UserNotFoundException, IncorrectPasswordException, UserBannedException {
+
+        String token = userService.loginViaSimulator(user);
+
+        return ResponseEntity.ok(new Result<>(200, "登录成功", token));
+    }
+
+    @GetMapping("/getOnlineUser")
+    public ResponseEntity<Result<List<User>>> getOnlineUser(){
+        return ResponseEntity.ok(new Result<>(200, "找到如下数据", userService.getOnlineUser()));
+    }
 }
 

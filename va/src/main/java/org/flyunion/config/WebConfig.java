@@ -16,11 +16,13 @@ public class WebConfig implements WebMvcConfigurer {
 
 	private final AuthenticationInterceptor authenticationInterceptor;
 	private final BackendInterceptor backendInterceptor;
+    private final SimulatorAuthorizationInterceptor simulatorAuthorizationInterceptor;
 
-	public WebConfig(AuthenticationInterceptor authenticationInterceptor, BackendInterceptor backendInterceptor) {
+	public WebConfig(AuthenticationInterceptor authenticationInterceptor, BackendInterceptor backendInterceptor, SimulatorAuthorizationInterceptor simulatorAuthorizationInterceptor) {
 		this.authenticationInterceptor = authenticationInterceptor;
 		this.backendInterceptor = backendInterceptor;
-	}
+        this.simulatorAuthorizationInterceptor = simulatorAuthorizationInterceptor;
+    }
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
@@ -30,5 +32,8 @@ public class WebConfig implements WebMvcConfigurer {
 		registry.addInterceptor(backendInterceptor)
 				.addPathPatterns("/**")
 				.order(1);
+        registry.addInterceptor(simulatorAuthorizationInterceptor)
+                .addPathPatterns("/**")
+                .order(2);
 	}
 }

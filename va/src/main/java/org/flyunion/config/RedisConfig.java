@@ -80,6 +80,9 @@ public class RedisConfig {
 		return createInitializedConnectionFactory(3);
 	}
 
+    @Bean(name = "onlineUserRedisConnectionFactory")
+    public RedisConnectionFactory onlineUserRedisConnectionFactory(){return createInitializedConnectionFactory(4);}
+
 	private RedisConnectionFactory createInitializedConnectionFactory(int database) {
 		RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
 		config.setHostName(redisProperties.getHost());
@@ -131,6 +134,13 @@ public class RedisConfig {
 			GenericJackson2JsonRedisSerializer serializer){
 		return buildRedisTemplate(ipBlackListRedisConnectionFactory, serializer);
 	}
+
+    @Bean(name = "onlineUserRedisTemplate")
+    public RedisTemplate<String, Object> onlineUserRedisTemplate(
+            @Qualifier("onlineUserRedisConnectionFactory") RedisConnectionFactory onlineUserRedisConnectionFactory,
+            GenericJackson2JsonRedisSerializer serializer){
+        return buildRedisTemplate(onlineUserRedisConnectionFactory, serializer);
+    }
 
 	private RedisTemplate<String, Object> buildRedisTemplate(RedisConnectionFactory connectionFactory,
 															 GenericJackson2JsonRedisSerializer serializer) {

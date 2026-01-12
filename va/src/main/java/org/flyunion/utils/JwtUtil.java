@@ -7,6 +7,8 @@ import org.flyunion.exception.TokenExpiredException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 /**
@@ -97,6 +99,21 @@ public class JwtUtil {
 			throw new TokenExpiredException("Token已经过期！请重新登录");
 		}
 	}
+    
+    public static String generateTokenViaSimulator(String cid) {
+        LocalDateTime expireTime = LocalDateTime.now().plusHours(3);
+        log.info("模拟器Token开始生成，有效时长三个小时。生成Token的用户为{}", cid);
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("cid", cid);
+
+        String token = Jwts.builder()
+                .setClaims(claims)
+                .setExpiration(Date.from(expireTime.atZone(ZoneOffset.ofHours(8)).toInstant()))
+                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                .compact();
+        log.info("token生成完毕: {}，有效时间为三个小时", token);
+        return token;
+    }
 
 	/**将token加入黑名单*/
 	public static void addBlackList(String token){

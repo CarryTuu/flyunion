@@ -57,27 +57,26 @@ public class BackendInterceptor implements HandlerInterceptor {
 		}
 
 		Method method = handlerMethod.getMethod();
-		SkipAuthentication skipAuthentication = method.getAnnotation(SkipAuthentication.class);
-		if(skipAuthentication != null){
-			return true;
-		}
+        if(method.isAnnotationPresent(SkipAuthentication.class)){
+            return true;
+        }
 		// 检查方法是否有BackendAuthorization注解
-		BackendAuthorization authAnnotation = method.getAnnotation(BackendAuthorization.class);
-		if (authAnnotation != null) {
-			String token = request.getHeader("Authorization");
-			User user = userService.loadUserByCid(JwtUtil.getCidFromToken(token));
-			int requiredPermission = authAnnotation.permission();
+		if (method.isAnnotationPresent(BackendAuthorization.class)) {
+            BackendAuthorization authAnnotation = method.getAnnotation(BackendAuthorization.class);
+            String token = request.getHeader("Authorization");
+            User user = userService.loadUserByCid(JwtUtil.getCidFromToken(token));
+            int requiredPermission = authAnnotation.permission();
 
-			// 获取用户权限
-			Integer userPermission = user.getPermission();
+            // 获取用户权限
+            Integer userPermission = user.getPermission();
 
-			// 权限检查
-			if (userPermission == null || userPermission < requiredPermission) {
-				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-				response.getWriter().write("{\"code\": 403, \"message\": \"Permission Not Granted\", \"data\": null}");
-				return false;
-			}
-			return true;
+            // 权限检查
+            if (userPermission == null || userPermission < requiredPermission) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.getWriter().write("{\"code\": 403, \"message\": \"Permission Not Granted\", \"data\": null}");
+                return false;
+            }
+            return true;
 		}
 		return true;
 	}

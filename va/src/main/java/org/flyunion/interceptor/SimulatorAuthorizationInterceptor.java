@@ -3,7 +3,8 @@ package org.flyunion.interceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.flyunion.annotation.SimulatorAuthorize;
+import org.flyunion.annotation.SimulatorAuthorization;
+import org.flyunion.annotation.SkipAuthentication;
 import org.flyunion.utils.JwtUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -32,7 +33,7 @@ public class SimulatorAuthorizationInterceptor implements HandlerInterceptor {
         }
 
         Method method = handlerMethod.getMethod();
-        if (method.isAnnotationPresent(SimulatorAuthorize.class)) {
+        if (method.isAnnotationPresent(SimulatorAuthorization.class)) {
             String authorization = request.getHeader("Authorization");
             if (authorization == null || authorization.isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -47,10 +48,10 @@ public class SimulatorAuthorizationInterceptor implements HandlerInterceptor {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("{\"code\": 401, \"message\": \"Unauthorized\", \"data\": null}");
             return false;
+        }else if(method.isAnnotationPresent(SkipAuthentication.class)){
+            return true;
         }
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write("{\"code\": 401, \"message\": \"Unauthorized\", \"data\": null}");
-        return false;
+        return true;
     }
 
     private String getClientIP(HttpServletRequest request) {

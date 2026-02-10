@@ -37,7 +37,7 @@ public class MetarService {
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
 		JsonNode node = objectMapper.readTree(response.body());
-		String text = node.get("data").get("metar").asText();
+		String text = node.get("data").get("rawText").asText();
 
 		return MetarParser.parseMetar(text);
 	}

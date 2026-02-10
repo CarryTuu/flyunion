@@ -157,7 +157,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void logOut(String token) throws TokenExpiredException {
 		redisUtil.deleteToken(JwtUtil.getCidFromToken(token));
-		JwtUtil.addBlackList(token);
+        this.simulatorOffLine(JwtUtil.getCidFromToken(token));
+        JwtUtil.addBlackList(token);
 	}
 
 	@Override
@@ -184,6 +185,7 @@ public class UserServiceImpl implements UserService {
                 log.info("密码信息校对正确，登录用户身份已验证：{}，开始生成token", user.getCid());
                 String token = JwtUtil.generateTokenViaSimulator(userFromDB.getCid());
                 redisUtil.storeToken(userFromDB.getEmail(), token);
+                this.newOnlineUser(userFromDB.getCid());
                 return token;
             }
             log.error("密码信息校对失败，登录用户身份验证失败！");

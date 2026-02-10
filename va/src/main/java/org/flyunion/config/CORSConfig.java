@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +16,8 @@ import java.util.List;
  * @author 1228
  * @version 0.1-SNAPSHOT
  */
-@Configuration
+//@Configuration
+//@EnableWebMvc
 public class CORSConfig {
 
 	@Bean
@@ -25,7 +27,6 @@ public class CORSConfig {
 		config.setAllowedOrigins(List.of("*")); // 允许来自这个源的请求
 		config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 允许的方法
 		config.setAllowedHeaders(List.of("*")); // 允许的头部
-//		config.setAllowCredentials(true); // 允许携带cookies
 
 		// 对于所有路径应用CORS配置
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

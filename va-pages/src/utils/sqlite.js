@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const sqliteService = axios.create({
-    baseURL: import.meta.env.VITE_BASE_API_SQLITE,
+    // baseURL: "http://localhost:9998",
+    baseURL: "https://api.sqlite.tysong.cn",
 });
 //请求拦截器
 sqliteService.interceptors.request.use(config => {

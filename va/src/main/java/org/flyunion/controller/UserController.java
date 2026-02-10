@@ -1,6 +1,7 @@
 package org.flyunion.controller;
 
 import org.flyunion.annotation.BackendAuthorization;
+import org.flyunion.annotation.SimulatorAuthorization;
 import org.flyunion.annotation.SkipAuthentication;
 import org.flyunion.entity.User;
 import org.flyunion.entity.request.ChangeInfoRequest;
@@ -138,6 +139,7 @@ public class UserController {
     }
 
     @GetMapping("/getOnlineUser")
+    @SimulatorAuthorization
     public ResponseEntity<Result<List<User>>> getOnlineUser(){
         return ResponseEntity.ok(new Result<>(200, "找到如下数据", userService.getOnlineUser()));
     }

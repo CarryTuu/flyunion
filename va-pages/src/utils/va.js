@@ -2,7 +2,8 @@ import axios from "axios";
 import showUnauthorizedAlert from "@/utils/Unauthorized.js";
 
 const service = axios.create({
-    baseURL: import.meta.env.VITE_BASE_API_VA,
+    // baseURL: "http://localhost:9999",
+    baseURL: "https://api.va.tysong.cn",
 });
 //请求拦截器
 service.interceptors.request.use(config => {
